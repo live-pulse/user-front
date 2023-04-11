@@ -13,6 +13,9 @@ export default function MainNavbar() {
         { plusIcon({width: 30, height: 30}) }
         { bellIcon({width: 30, height: 30}) }
         { userIcon({width: 30, height: 30}) }
+        {/*<Badge color="error" content={5} isInvisible={false} shape="circle">*/}
+        {/*  { notificationIcon({width: 30, height: 30}) }*/}
+        {/*</Badge>*/}
       </Logo>
     </Navbar>
     <Menubar />
@@ -32,8 +35,10 @@ const Navbar = styled.div`
   justify-content: space-between;
   background: white;
   backdrop-filter: saturate(180%) blur(var(--nextui--navbarBlur));
-  height: 50px;
+  height: 30px;
+  margin-top: 3%;
   margin-bottom: 0 !important;
+  align-items: center;
 `;
 
 const Icon = styled.h5`
@@ -42,6 +47,7 @@ const Icon = styled.h5`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0 !important;
 `;
 
 const IconText = styled.div`
@@ -49,7 +55,7 @@ const IconText = styled.div`
 `;
 
 const Logo = styled.div`
-  padding: 2% 3% 2% 2%;
+  padding: 3% 3% 2% 2%;
   svg {
     margin-left: 5px;
   }
