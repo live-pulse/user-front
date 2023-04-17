@@ -71,7 +71,7 @@ export default function ReadyBroadcastCard() {
           </Grid.Container>
           <Grid style={{ marginTop: '10px' }}>
             <Badge color="error" size="xs" variant="bordered">
-              <Avatar icon={notificationIcon({width: 15, height: 15})} size="xs" style={{ backgroud: 'white' }}/>
+              <Avatar icon={notificationIcon({width: 15, height: 15})} size="xs" style={{ background: 'white' }}/>
               <span style={{ marginRight: '2px' }}>알람받기</span>
             </Badge>
           </Grid>

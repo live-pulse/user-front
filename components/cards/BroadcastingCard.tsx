@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Avatar } from "@nextui-org/react";
+import { Avatar, Badge, Grid } from "@nextui-org/react";
 
 const data = [
   {
@@ -44,6 +44,13 @@ export default function BroadcastingCard() {
   return <CardListWrap>
     {data.map((item) => {
       return <CardWrap key={item.id}>
+        <LiveBadge>
+          <Grid>
+            <Badge enableShadow disableOutline color="error">
+              Live
+            </Badge>
+          </Grid>
+        </LiveBadge>
         <Image src={item.src} alt={item.title} />
         <Title>{item.title}</Title>
         <Streamer>
@@ -112,4 +119,32 @@ const Streamer = styled.div`
 
 const AvatarName = styled.span`
   padding-left: 5px;
+`;
+
+const LiveBadge = styled.div`
+  position: absolute;
+  z-index: 10;
+  top: 3%;
+  left: 5%;
+  
+  div > span > span {
+    -webkit-animation: blink 1s ease-in-out infinite alternate;
+    -moz-animation: blink 1s ease-in-out infinite alternate;
+    animation: blink 1s ease-in-out infinite alternate;
+
+    @-webkit-keyframes blink{
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @-moz-keyframes blink{
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes blink{
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  }
 `;
