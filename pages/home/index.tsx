@@ -1,14 +1,23 @@
 'use client'
 
 import styled from 'styled-components';
-import BroadcastCard from '@/components/cards/BroadcastCard';
+import BroadcastingCard from '@/components/cards/BroadcastingCard';
+import ReadyBroadcastCard from "@/components/cards/ReadyBroadcastCard";
 
 export default function Home() {
   return <>
-    <TitleWrap>
-      <Title>바로 지금! 라이브 방송</Title>
-    </TitleWrap>
-    <BroadcastCard />
+    <>
+      <TitleWrap style={{ marginTop: '29%' }}>
+        <Title>바로 지금! 라이브 방송</Title>
+      </TitleWrap>
+      <BroadcastingCard />
+    </>
+    <>
+      <TitleWrap style={{ marginTop: '3%' }}>
+        <Title>라이브 예고</Title>
+      </TitleWrap>
+      <ReadyBroadcastCard />
+    </>
   </>;
 }
 
@@ -16,7 +25,6 @@ const TitleWrap = styled.div`
   display: flex;
   justify-content: start;
   align-items: center;
-  margin-top: 27%;
   width: 100%;
   padding: 0 3% 0 3%;
 `;

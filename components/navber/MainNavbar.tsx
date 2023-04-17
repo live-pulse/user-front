@@ -27,6 +27,7 @@ const NavbarWrap = styled.div`
   top: 0;
   left: 0;
   right: 0;
+  z-index: 999;
 `;
 
 const Navbar = styled.div`
@@ -35,8 +36,7 @@ const Navbar = styled.div`
   justify-content: space-between;
   background: white;
   backdrop-filter: saturate(180%) blur(var(--nextui--navbarBlur));
-  height: 30px;
-  margin-top: 3%;
+  height: initial;
   margin-bottom: 0 !important;
   align-items: center;
 `;
