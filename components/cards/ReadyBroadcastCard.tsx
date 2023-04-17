@@ -71,7 +71,7 @@ export default function ReadyBroadcastCard() {
           </Grid.Container>
           <Grid style={{ marginTop: '10px' }}>
             <Badge color="error" size="xs" variant="bordered">
-              <Avatar icon={notificationIcon({width: 15, height: 15})} size="xs" style={{ background: 'white' }}/>
+              <Avatar icon={notificationIcon({width: 15, height: 15})} size="xs" />
               <span style={{ marginRight: '2px' }}>알람받기</span>
             </Badge>
           </Grid>
@@ -93,6 +93,10 @@ const CardWrap = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+  
+  .nextui-avatar-bg {
+    background-color: #fff !important;
+  }
 `;
 
 const ImageWrap = styled.div`
