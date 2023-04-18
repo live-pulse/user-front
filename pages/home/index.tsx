@@ -2,22 +2,20 @@
 
 import styled from 'styled-components';
 import BroadcastingCard from '@/components/cards/BroadcastingCard';
-import ReadyBroadcastCard from "@/components/cards/ReadyBroadcastCard";
+import ReadyBroadcastCard from '@/components/cards/ReadyBroadcastCard';
+import Footer from '@/components/footer/Footer';
 
 export default function Home() {
   return <>
-    <>
-      <TitleWrap style={{ marginTop: '29%' }}>
-        <Title>바로 지금! 라이브 방송</Title>
-      </TitleWrap>
-      <BroadcastingCard />
-    </>
-    <>
-      <TitleWrap style={{ marginTop: '3%' }}>
-        <Title>라이브 예고</Title>
-      </TitleWrap>
-      <ReadyBroadcastCard />
-    </>
+    <TitleWrap style={{marginTop: '29%'}}>
+      <Title>바로 지금! 라이브 방송</Title>
+    </TitleWrap>
+    <BroadcastingCard/>
+    <TitleWrap style={{marginTop: '3%'}}>
+      <Title>라이브 예고</Title>
+    </TitleWrap>
+    <ReadyBroadcastCard/>
+    <Footer/>
   </>;
 }
 

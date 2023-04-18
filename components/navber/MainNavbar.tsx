@@ -13,9 +13,6 @@ export default function MainNavbar() {
         { plusIcon({width: 30, height: 30}) }
         { bellIcon({width: 30, height: 30}) }
         { userIcon({width: 30, height: 30}) }
-        {/*<Badge color="error" content={5} isInvisible={false} shape="circle">*/}
-        {/*  { notificationIcon({width: 30, height: 30}) }*/}
-        {/*</Badge>*/}
       </Logo>
     </Navbar>
     <Menubar />
