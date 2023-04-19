@@ -15,7 +15,7 @@ export default function Footer() {
 
 const FooterWrap = styled.div`
   margin-top: 5%;
-  height: 100px;
+  height: 150px;
   width: 100%;
   background-color: #f2f3f4;
   display: flex;

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { Avatar, Badge, Grid } from "@nextui-org/react";
+import Link from 'next/link';
+import { Avatar, Badge, Grid } from '@nextui-org/react';
 
 const data = [
   {
@@ -43,24 +44,26 @@ const data = [
 export default function BroadcastingCard() {
   return <CardListWrap>
     {data.map((item) => {
-      return <CardWrap key={item.id}>
-        <LiveBadge>
-          <Grid>
-            <Badge enableShadow disableOutline color="error">
-              Live
-            </Badge>
-          </Grid>
-        </LiveBadge>
-        <Image src={item.src} alt={item.title} />
-        <Title>{item.title}</Title>
-        <Streamer>
-          <Avatar
-            src={item.avatarImg}
-            size="xs"
-          />
-          <AvatarName>{item.streamer}</AvatarName>
-        </Streamer>
-      </CardWrap>;
+      return <Link href={`/broadcast/${item.id}`} key={item.id}>
+        <CardWrap>
+          <LiveBadge>
+            <Grid>
+              <Badge enableShadow disableOutline color="error">
+                Live
+              </Badge>
+            </Grid>
+          </LiveBadge>
+          <Image src={item.src} alt={item.title}/>
+          <Title>{item.title}</Title>
+          <Streamer>
+            <Avatar
+              src={item.avatarImg}
+              size="xs"
+            />
+            <AvatarName>{item.streamer}</AvatarName>
+          </Streamer>
+        </CardWrap>
+      </Link>;
     })}
   </CardListWrap>;
 }
