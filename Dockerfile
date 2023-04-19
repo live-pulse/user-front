@@ -1,4 +1,4 @@
-FROM node:19-alpine
+FROM node
 
 RUN npm i -g pnpm
 
@@ -7,6 +7,8 @@ WORKDIR /app/build
 COPY . .
 
 RUN pnpm install
+
+RUN pnpm build
 
 EXPOSE 3000
 
