@@ -2165,6 +2165,16 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
+hls.js@^0.6.14:
+  version "0.6.21"
+  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-0.6.21.tgz#9d91008029974c4737e08a151a3f4f0dd408ba93"
+  integrity sha512-3mjRB1y/FYJKaQ/4nVsAqRUWwddcDfSCCNpuNF4faL0Mpo66QH6DoXwImUKv8DlzzDEVEh9mku+hvIDOYgfYGw==
+
+hls.js@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.4.0.tgz#e73af3e7c8d4310a2bcc92d5ade362dfb781fef7"
+  integrity sha512-VEjg7Rx5FlE9TB3MIn0HPgq3J+vR7EoQnjaqMCk/ISEaCOSZlAFh4g867f1QkSxZiq9kHeUZo+iH16X7VS3jKA==
+
 hoist-non-react-statics@^3.0.0, hoist-non-react-statics@^3.3.0:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
@@ -2764,6 +2774,13 @@ react-dom@18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-hls@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/react-hls/-/react-hls-0.0.8.tgz#b18d9264aceda0c5ad9a86a278cd39895629cf3d"
+  integrity sha512-mkGEGRuzdWxAoLNX4glw+VpNPDnRa51+5nGgeOzZsB17AbVHHQlLWtDDxryttVYX4jbnNSPVmLNSLPXbhJMJvA==
+  dependencies:
+    hls.js "^0.6.14"
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
