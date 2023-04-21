@@ -81,4 +81,12 @@ const notificationIcon = ({width, height}: Size) => {
   </>;
 }
 
-export { userIcon, bellIcon, realCameraIcon, plusIcon, notificationIcon };
+const outIcon = ({width, height}: Size) => {
+  return <>
+    <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 24 24" fill="none">
+      <path d="M16 8L8 16M8 8L16 16" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </>;
+}
+
+export { userIcon, bellIcon, realCameraIcon, plusIcon, notificationIcon, outIcon };
