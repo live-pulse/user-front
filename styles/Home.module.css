@@ -4,4 +4,9 @@
   justify-content: space-between;
   align-items: center;
   min-height: 100%;
+
+  max-width: 590px;
+  left: 50%;
+  position: relative;
+  transform: translateX(-50%);
 }

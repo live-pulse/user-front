@@ -69,10 +69,7 @@ export default function BroadcastInfo({item}: Props) {
         </LiveBadge>
       </LiveBadgeWrap>
     </HeaderWrap>
-    <video ref={videoRef} controls={false} autoPlay={true} muted={true}>
-      <source src={item.streamUrl} type="application/x-mpegURL"/>
-      <script src={item.streamUrl} async/>
-    </video>
+    <iframe id="jungsu" src={item.streamUrl} />
     <BottomWrap>
       <div>
         <Input placeholder="채팅을 입력해보세요!"/>
@@ -103,7 +100,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         description: '마스터 찍기 프로젝트 3일차',
         tags: ['lol', 'master', 'league of legends', 'league'],
         streamer: 'Hwasowl',
-        streamUrl: 'https://stream.hannah-log.site/socket/hls/jungsu/index.m3u8',
+        streamUrl: 'https://moonshot.hannah-log.site:5000/WebRTCAppEE/play.html?id=jungsu&playOrder=hls&mute=false',
         streamKey: 'jungsu',
         state: 'LIVE',
       }
@@ -113,8 +110,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 const BroadcastWrap = styled.div`
   height: 100vh;
+  width: 100%;
 
-  video {
+  iframe {
     width: 100%;
     height: 100vh;
     outline: none;

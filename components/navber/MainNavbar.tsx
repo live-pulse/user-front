@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { bellIcon, realCameraIcon, userIcon, plusIcon } from '@/components/svgs/Svgs';
 import Menubar from '@/components/navber/Menubar';
+import Link from "next/link";
 
 export default function MainNavbar() {
   return <NavbarWrap>
@@ -10,7 +11,9 @@ export default function MainNavbar() {
         <IconText>Live Pulse</IconText>
       </Icon>
       <Logo>
-        { plusIcon({width: 30, height: 30}) }
+        <Link href="/broadcast/create">
+          { plusIcon({width: 30, height: 30}) }
+        </Link>
         { bellIcon({width: 30, height: 30}) }
         { userIcon({width: 30, height: 30}) }
       </Logo>
