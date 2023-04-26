@@ -1,11 +1,9 @@
 'use client'
 
+import { WebRTCAdaptor } from '@antmedia/webrtc_adaptor';
+import { Badge, Button, Input } from '@nextui-org/react';
 import { GetServerSideProps } from 'next';
-import { useEffect, useRef, useState } from 'react';
-import Hls from 'hls.js';
-import Link from 'next/link';
-import { outIcon } from '@/components/svgs/Svgs';
-import { Badge, Input } from '@nextui-org/react';
+import { useEffect, useState } from 'react';
 import {
   BroadcastWrap, BottomWrap, Chat, ChatWrap, Header,
   HeaderWrap, LiveBadge, LiveBadgeWrap, ViewerCount
@@ -24,44 +22,50 @@ interface Broadcast {
   state: 'LIVE' | 'END' | 'READY';
 }
 
-interface Props {
-  item: Broadcast
-}
-
-export default function BroadcastInfo({item}: Props) {
-  const videoRef = useRef<HTMLVideoElement>(null!);
-  const [hls, setHls] = useState<Hls | null>(null);
+export default function BroadcastStream(broadcast: Broadcast) {
+  const [streamVideo, setStreamVideo] = useState<WebRTCAdaptor>(null!);
+  const [broadcastStatus, setBroadcastStatus] = useState<string>(broadcast.state);
 
   useEffect(() => {
-    const video: HTMLMediaElement = videoRef.current;
-    const url = item.streamUrl;
-
-    const loadHls = () => {
-      if (video && Hls.isSupported()) {
-        const hlsInstance = new Hls();
-        hlsInstance.loadSource(url);
-        hlsInstance.attachMedia(video);
-        setHls(hlsInstance);
-      } else if (video?.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = url;
-      }
-    };
-
-    loadHls();
-
-    return () => {
-      if (hls) hls.destroy();
-    };
+    const webRTCAdaptor = new WebRTCAdaptor({
+      websocket_url: 'wss://moonshot.hannah-log.site:5000/WebRTCAppEE/websocket',
+      mediaConstraints: {
+        video: true,
+        audio: true,
+      },
+      peerconnection_config: {
+        'iceServers': [{'urls': 'stun:stun1.l.google.com:19302'}]
+      },
+      sdp_constraints: {
+        OfferToReceiveAudio: false,
+        OfferToReceiveVideo: false,
+      },
+      localVideoId: broadcast.streamKey,
+      bandwidth: 600,
+      dataChannelEnabled: true,
+      callback: (info, obj) => {},
+      callbackError: function (error, message) {},
+    });
+    setStreamVideo(webRTCAdaptor);
   }, []);
+
+  const start = () => {
+    streamVideo.publish(broadcast.streamKey);
+    setBroadcastStatus('LIVE');
+  }
+
+  const finish = () => {
+    streamVideo.stop(broadcast.streamKey);
+    setBroadcastStatus('END');
+  }
 
   return <BroadcastWrap>
     <HeaderWrap>
       <Header>
-        <h3>{item.title}</h3>
-        <Link href={'/home'}>{outIcon({width: 35, height: 35})}</Link>
+        <h3>{broadcast.title}</h3>
       </Header>
       <LiveBadgeWrap>
-        <span>{item.streamer}</span>
+        <span>{broadcast.streamer}</span>
         <LiveBadge>
           <Badge enableShadow disableOutline color="error">
             Live
@@ -72,13 +76,12 @@ export default function BroadcastInfo({item}: Props) {
         </LiveBadge>
       </LiveBadgeWrap>
     </HeaderWrap>
-    <video ref={videoRef} controls={false} autoPlay={true} muted={true}>
-      <source src={item.streamUrl} type="application/x-mpegURL"/>
-      <script src={item.streamUrl} async/>
-    </video>
+    <video id={broadcast.streamKey} autoPlay muted></video>
     <BottomWrap>
       <div>
         <Input placeholder="채팅을 입력해보세요!"/>
+        {broadcastStatus === 'READY' && <Button onPress={start} color="gradient" style={{width: '100%'}}>방송 시작</Button> }
+        {broadcastStatus === 'LIVE' && <Button onPress={finish} color="gradient" style={{width: '100%'}}>방송 종료</Button> }
       </div>
       <ChatWrap>
         <Chat><h6>안녕나잼민4</h6>형형 칼바람 해줘</Chat>
@@ -93,12 +96,11 @@ export default function BroadcastInfo({item}: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const id = Number(ctx.params?.id);
-  console.log(id)
-
+  const streamKey = ctx.params?.id;
+  console.log(streamKey);
   return {
-    props: {
-      item: {
+    props:
+      {
         id: 2,
         src: 'https://nextui.org/images/card-example-2.jpeg',
         avatarImg: 'https://avatars.githubusercontent.com/u/44762533?v=4',
@@ -107,9 +109,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         tags: ['lol', 'master', 'league of legends', 'league'],
         streamer: 'Hwasowl',
         streamUrl: 'https://moonshot.hannah-log.site:5000/WebRTCAppEE/streams/jungsu.m3u8',
-        streamKey: 'jungsu',
-        state: 'LIVE',
+        streamKey: streamKey,
+        state: 'READY',
       }
-    }
-  }
+  };
 }

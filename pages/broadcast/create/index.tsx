@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Link from 'next/link';
 import { Button, Checkbox, Input, Textarea } from '@nextui-org/react';
 import { CameraIcon } from '@/components/svgs/Svgs';
 
@@ -26,9 +27,14 @@ export default function CreateBroadcast() {
         </TagBox>
       </div>
       <Input label="방송 시작 시간" placeholder="방송 시작 시간" type="time" width="100%" />
-      <Button icon={<CameraIcon fill="currentColor" />} color="gradient" style={{width: '100%'}}>
-        방송 생성
-      </Button>
+      <Link href={{
+        pathname: '/broadcast/stream/[id]',
+        query: { id: 'jungsu' },
+      }}>
+        <Button icon={<CameraIcon  width={24} height={24} />} color="gradient" style={{width: '100%'}}>
+          방송 생성
+        </Button>
+      </Link>
     </InputWrap>
   </CreateWrap>;
 }
@@ -58,7 +64,8 @@ const InputWrap = styled.div`
   
   label, span { 
     color: white;
-    margin-right: 3px;
+    margin-right: 5px;
+    padding-left: 5px !important;
   }
   
   div { 

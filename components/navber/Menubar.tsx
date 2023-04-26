@@ -8,7 +8,6 @@ type NavData = {
   index: number;
   name: string;
   href: string;
-  isActive: boolean;
 }
 
 type NavDataArr = NavData[];
@@ -18,19 +17,16 @@ const navData: NavDataArr = [
     index: 0,
     name: "Home",
     href: "/home",
-    isActive: false,
   },
   {
     index: 1,
     name: "Event",
     href: "/event",
-    isActive: false,
   },
   {
     index: 2,
     name: "Category",
     href: "/category",
-    isActive: false,
   }
 ];
 
