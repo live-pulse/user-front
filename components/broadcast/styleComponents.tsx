@@ -32,7 +32,7 @@ const BottomWrap = styled.div`
   -webkit-mask-image: linear-gradient(transparent, #fff 30px);
 
   input {
-    width: 40vh;
+    width: 87vw;
   }
 
   label {

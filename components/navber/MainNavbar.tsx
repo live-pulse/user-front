@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { bellIcon, realCameraIcon, userIcon, plusIcon } from '@/components/svgs/Svgs';
 import Menubar from '@/components/navber/Menubar';
-import Link from "next/link";
+import Link from 'next/link';
 
 export default function MainNavbar() {
   return <NavbarWrap>
