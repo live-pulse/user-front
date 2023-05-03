@@ -5,7 +5,7 @@ import { Button, Checkbox, Input, Textarea } from '@nextui-org/react';
 import { CameraIcon } from '@/components/svgs/Svgs';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { createBroadcast } from '@/api/broadcast/actions';
+import { postAction } from '@/api/myActions';
 
 export default function CreateBroadcast() {
   const tagData = ["게임", "먹방", "일상", "공부", "쇼핑"];
@@ -33,9 +33,12 @@ export default function CreateBroadcast() {
       startDate: date,
       tags,
     }
-    const result = await createBroadcast(request);
-    console.log(result);
-    router.push(`/broadcast/stream/${result.data.id}`);
+    const result = await postAction('/broadcasts', request);
+    if (result) {
+      console.log(result);
+      alert('방송이 생성되었습니다');
+      router.push(`/broadcast/stream/${result.data.id}`);
+    }
   }
 
   return <CreateWrap>

@@ -4,11 +4,11 @@ import { WebRTCAdaptor } from '@antmedia/webrtc_adaptor';
 import { Badge, Button, Input, Loading } from '@nextui-org/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { getRestActions } from '@/api/myActions';
 import {
   BroadcastWrap, BottomWrap, Chat, ChatWrap, Header,
   HeaderWrap, LiveBadge, LiveBadgeWrap, ViewerCount
 } from '@/components/broadcast/styleComponents';
-import { getOneBroadcast } from '@/api/broadcast/actions';
 
 interface Broadcast {
   id: number;
@@ -30,11 +30,11 @@ export default function BroadcastStream() {
   const [broadcastStatus, setBroadcastStatus] = useState<string>('READY');
 
   useEffect(() => {
-    alert('페이지를 나가면 방송을 시작하지 않았어도 다시 방송을 진행하지 못합니다. 유의하여 주시길 바랍니다.');
-    const id = Number(router.query.id);
+    if (!router.isReady) return;
+    const id = router.query.id;
 
     async function fetchData() {
-      const fetchData = await getOneBroadcast(id);
+      const fetchData = await getRestActions('/broadcasts', id);
       setItem(fetchData.data);
       return fetchData.data;
     }

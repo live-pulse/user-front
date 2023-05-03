@@ -15,7 +15,9 @@ export default function MainNavbar() {
           { plusIcon({width: 30, height: 30}) }
         </Link>
         { bellIcon({width: 30, height: 30}) }
-        { userIcon({width: 30, height: 30}) }
+        <Link href="/users">
+          { userIcon({width: 30, height: 30}) }
+        </Link>
       </Logo>
     </Navbar>
     <Menubar />

@@ -10,7 +10,7 @@ import {
   BroadcastWrap, BottomWrap, Chat, ChatWrap, Header,
   HeaderWrap, LiveBadge, LiveBadgeWrap, ViewerCount
 } from '@/components/broadcast/styleComponents';
-import { getOneBroadcast } from '@/api/broadcast/actions';
+import { getRestActions } from "@/api/myActions";
 
 interface Broadcast {
   id: number;
@@ -32,9 +32,11 @@ export default function BroadcastInfo() {
   const [hls, setHls] = useState<Hls | null>(null);
 
   useEffect(() => {
+    if (!router.isReady) return;
     const id = Number(router.query.id);
+
     async function fetchData() {
-      const fetchData = await getOneBroadcast(id);
+      const fetchData = await getRestActions('/broadcasts', id);
       setItem(fetchData.data);
       return fetchData.data;
     }
@@ -60,7 +62,7 @@ export default function BroadcastInfo() {
           if (hls) hls.destroy();
         };
       });
-  }, []);
+  }, [router.isReady]);
 
   return (
     item ?
