@@ -7,10 +7,17 @@ import Link from 'next/link';
 import { outIcon } from '@/components/svgs/Svgs';
 import { Badge, Input, Loading } from '@nextui-org/react';
 import {
-  BroadcastWrap, BottomWrap, Chat, ChatWrap, Header,
-  HeaderWrap, LiveBadge, LiveBadgeWrap, ViewerCount
+  BottomWrap,
+  BroadcastWrap,
+  Chat,
+  ChatWrap,
+  Header,
+  HeaderWrap,
+  LiveBadge,
+  LiveBadgeWrap,
+  ViewerCount
 } from '@/components/broadcast/styleComponents';
-import { getRestActions } from "@/api/myActions";
+import { getRestActions, RequestUrl } from '@/api/myActions';
 
 interface Broadcast {
   id: number;
@@ -36,7 +43,7 @@ export default function BroadcastInfo() {
     const id = Number(router.query.id);
 
     async function fetchData() {
-      const fetchData = await getRestActions('/broadcasts', id);
+      const fetchData = await getRestActions(RequestUrl.BROADCASTS, id);
       setItem(fetchData.data);
       return fetchData.data;
     }

@@ -4,10 +4,17 @@ import { WebRTCAdaptor } from '@antmedia/webrtc_adaptor';
 import { Badge, Button, Input, Loading } from '@nextui-org/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { getRestActions } from '@/api/myActions';
+import { getRestActions, RequestUrl } from '@/api/myActions';
 import {
-  BroadcastWrap, BottomWrap, Chat, ChatWrap, Header,
-  HeaderWrap, LiveBadge, LiveBadgeWrap, ViewerCount
+  BottomWrap,
+  BroadcastWrap,
+  Chat,
+  ChatWrap,
+  Header,
+  HeaderWrap,
+  LiveBadge,
+  LiveBadgeWrap,
+  ViewerCount
 } from '@/components/broadcast/styleComponents';
 
 interface Broadcast {
@@ -34,7 +41,7 @@ export default function BroadcastStream() {
     const id = router.query.id;
 
     async function fetchData() {
-      const fetchData = await getRestActions('/broadcasts', id);
+      const fetchData = await getRestActions(RequestUrl.BROADCASTS, id);
       setItem(fetchData.data);
       return fetchData.data;
     }

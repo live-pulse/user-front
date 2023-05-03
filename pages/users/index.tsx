@@ -1,9 +1,34 @@
+'use client'
+
 import styled from 'styled-components';
 import { Button, Input, Modal, Row, Text } from '@nextui-org/react';
+import { postAction, RequestUrl } from '@/api/myActions';
 import { Mail, Password } from '@/components/svgs/Svgs';
-import Link from "next/link";
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import Link from 'next/link';
 
 export default function Users() {
+  const router = useRouter();
+
+  const [account, setAccount] = useState();
+  const onAccount = (e) => setAccount(e.currentTarget.value);
+  const [password, setPassword] = useState();
+  const onPassword = (e) => setPassword(e.currentTarget.value);
+
+  const create = async () => {
+    const request = {
+      account,
+      password,
+    }
+    const result = await postAction(RequestUrl.LOGIN, request);
+    if (result) {
+      console.log(result);
+      alert('로그인이 완료되었습니다.');
+      await router.push('/home');
+    }
+  }
+
   return <>
     <Modal
       preventClose
@@ -18,17 +43,19 @@ export default function Users() {
       </Modal.Header>
       <Modal.Body>
         <Input
+          value={account}
+          onChange={onAccount}
           bordered
           color="secondary"
-          size="lg"
           placeholder="Account"
           contentLeft={<Mail fill="currentColor" />}
         />
         <Input
+          value={password}
+          onChange={onPassword}
           bordered
           fullWidth
           color="secondary"
-          size="lg"
           placeholder="Password"
           type="password"
           contentLeft={<Password fill="currentColor" />}
@@ -39,7 +66,7 @@ export default function Users() {
           <Link href="/users/create">
             <Text size={14}>계정이 존재하지 않습니까?</Text>
           </Link>
-          <Button auto color="gradient">
+          <Button auto color="gradient" onPress={create}>
             Sign in
           </Button>
         </Row>

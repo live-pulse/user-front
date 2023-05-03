@@ -6,7 +6,7 @@ import { Mail, NameIcon, Password, PhoneIcon, PhotoIcon, UserIcon } from '@/comp
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Link from 'next/link';
-import { postAction } from "@/api/myActions";
+import { postAction, RequestUrl } from "@/api/myActions";
 
 export default function UsersCreate() {
   const router = useRouter();
@@ -36,7 +36,7 @@ export default function UsersCreate() {
       phone,
       userImageUrl,
     }
-    const result = await postAction('/users', request);
+    const result = await postAction(RequestUrl.USERS, request);
     if (result) {
       console.log(result);
       alert('회원가입이 완료되었습니다');
