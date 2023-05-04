@@ -65,7 +65,7 @@ export default function UsersCreate() {
             bordered
             color="secondary"
             placeholder="Account"
-            contentLeft={<UserIcon fill="currentColor" />}
+            contentLeft={<UserIcon />}
           />
           <Button auto color="gradient">
             중복체크
@@ -80,7 +80,7 @@ export default function UsersCreate() {
           size="lg"
           placeholder="Password"
           type="password"
-          contentLeft={<Password fill="currentColor"/>}
+          contentLeft={<Password />}
         />
         <Input
           value={passwordCheck}
@@ -90,7 +90,7 @@ export default function UsersCreate() {
           color="secondary"
           placeholder="Check Password"
           type="password"
-          contentLeft={<Password fill="currentColor"/>}
+          contentLeft={<Password />}
         />
         <Input
           value={mail}
@@ -100,7 +100,7 @@ export default function UsersCreate() {
           color="secondary"
           placeholder="Mail"
           type="mail"
-          contentLeft={<Mail fill="currentColor"/>}
+          contentLeft={<Mail />}
         />
         <Input
           value={name}
@@ -109,7 +109,7 @@ export default function UsersCreate() {
           fullWidth
           color="secondary"
           placeholder="Name"
-          contentLeft={<NameIcon fill="currentColor"/>}
+          contentLeft={<NameIcon />}
         />
         <Input
           value={phone}
@@ -118,7 +118,7 @@ export default function UsersCreate() {
           fullWidth
           color="secondary"
           placeholder="User Image"
-          contentLeft={<PhotoIcon fill="currentColor"/>}
+          contentLeft={<PhotoIcon />}
         />
         <Input
           value={userImageUrl}
@@ -127,7 +127,7 @@ export default function UsersCreate() {
           fullWidth
           color="secondary"
           placeholder="Phone"
-          contentLeft={<PhoneIcon fill="currentColor"/>}
+          contentLeft={<PhoneIcon />}
         />
       </Modal.Body>
       <Modal.Footer style={{marginBottom: '1rem'}}>

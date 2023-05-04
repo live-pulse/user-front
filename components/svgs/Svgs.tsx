@@ -108,17 +108,11 @@ const Password = () => {
   </svg>;
 };
 
-const Mail = ({fill, size, height, width, ...props}) => {
+const Mail = () => {
   return (
-    <svg
-      width={size || width || 24}
-      height={size || height || 24}
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg width={24} height={24} viewBox="0 0 24 24">
       <g
         fill="none"
-        stroke={fill}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={1.5}
@@ -131,27 +125,17 @@ const Mail = ({fill, size, height, width, ...props}) => {
   );
 };
 
-const UserIcon = ({
-                    fill = 'currentColor',
-                    filled,
-                    size,
-                    height,
-                    width,
-                    label,
-                    ...props
-                  }) => {
+const UserIcon = () => {
   return (
     <svg
       data-name="Iconly/Curved/Profile"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      width={size || width || 24}
-      height={size || height || 24}
-      {...props}
+      width={24}
+      height={24}
     >
       <g
         fill="none"
-        stroke={fill}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeMiterlimit={10}

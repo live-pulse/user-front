@@ -48,7 +48,7 @@ export default function Users() {
           bordered
           color="secondary"
           placeholder="Account"
-          contentLeft={<Mail fill="currentColor" />}
+          contentLeft={<Mail />}
         />
         <Input
           value={password}
@@ -58,7 +58,7 @@ export default function Users() {
           color="secondary"
           placeholder="Password"
           type="password"
-          contentLeft={<Password fill="currentColor" />}
+          contentLeft={<Password />}
         />
       </Modal.Body>
       <Modal.Footer>
