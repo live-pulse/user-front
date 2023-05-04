@@ -7,6 +7,9 @@ dependencies:
   '@nextui-org/react':
     specifier: 1.0.0-beta.12
     version: 1.0.0-beta.12(react-dom@18.2.0)(react@18.2.0)
+  '@react-aria/ssr':
+    specifier: ^3.6.0
+    version: 3.6.0(react@18.2.0)
   '@types/node':
     specifier: 18.15.10
     version: 18.15.10
@@ -666,7 +669,7 @@ packages:
       '@internationalized/message': 3.1.0
       '@internationalized/number': 3.2.0
       '@internationalized/string': 3.1.0
-      '@react-aria/ssr': 3.3.0(react@18.2.0)
+      '@react-aria/ssr': 3.6.0(react@18.2.0)
       '@react-aria/utils': 3.14.0(react@18.2.0)
       '@react-types/shared': 3.15.0(react@18.2.0)
       react: 18.2.0
@@ -681,7 +684,7 @@ packages:
       '@internationalized/message': 3.1.0
       '@internationalized/number': 3.2.0
       '@internationalized/string': 3.1.0
-      '@react-aria/ssr': 3.5.0(react@18.2.0)
+      '@react-aria/ssr': 3.6.0(react@18.2.0)
       '@react-aria/utils': 3.15.0(react@18.2.0)
       '@react-types/shared': 3.17.0(react@18.2.0)
       '@swc/helpers': 0.4.14
@@ -774,7 +777,7 @@ packages:
       '@react-aria/focus': 3.11.0(react@18.2.0)
       '@react-aria/i18n': 3.6.1(react@18.2.0)
       '@react-aria/interactions': 3.12.0(react@18.2.0)
-      '@react-aria/ssr': 3.3.0(react@18.2.0)
+      '@react-aria/ssr': 3.6.0(react@18.2.0)
       '@react-aria/utils': 3.14.0(react@18.2.0)
       '@react-aria/visually-hidden': 3.5.0(react@18.2.0)
       '@react-stately/overlays': 3.4.2(react@18.2.0)
@@ -827,8 +830,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@react-aria/ssr@3.5.0(react@18.2.0):
-    resolution: {integrity: sha512-h0MJdSWOd1qObLnJ8mprU31wI8tmKFJMuwT22MpWq6psisOOZaga6Ml4u6Ee6M6duWWISjXvqO4Sb/J0PBA+nQ==}
+  /@react-aria/ssr@3.6.0(react@18.2.0):
+    resolution: {integrity: sha512-OFiYQdv+Yk7AO7IsQu/fAEPijbeTwrrEYvdNoJ3sblBBedD5j5fBTNWrUPNVlwC4XWWnWTCMaRIVsJujsFiWXg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
@@ -882,7 +885,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@babel/runtime': 7.21.0
-      '@react-aria/ssr': 3.3.0(react@18.2.0)
+      '@react-aria/ssr': 3.6.0(react@18.2.0)
       '@react-stately/utils': 3.6.0(react@18.2.0)
       '@react-types/shared': 3.15.0(react@18.2.0)
       clsx: 1.2.1
@@ -894,7 +897,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@react-aria/ssr': 3.5.0(react@18.2.0)
+      '@react-aria/ssr': 3.6.0(react@18.2.0)
       '@react-stately/utils': 3.6.0(react@18.2.0)
       '@react-types/shared': 3.17.0(react@18.2.0)
       '@swc/helpers': 0.4.14
