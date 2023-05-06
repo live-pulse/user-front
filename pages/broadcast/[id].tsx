@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import Hls from 'hls.js';
 import Link from 'next/link';
-import { outIcon } from '@/components/svgs/Svgs';
-import { Badge, Input, Loading } from '@nextui-org/react';
+import { outIcon, PlayIcon } from '@/components/svgs/Svgs';
+import { Avatar, Badge, Input, Loading } from '@nextui-org/react';
 import {
   BottomWrap,
   BroadcastWrap,
@@ -15,7 +15,8 @@ import {
   HeaderWrap,
   LiveBadge,
   LiveBadgeWrap,
-  ViewerCount
+  ViewerCount,
+  ButtonWrap,
 } from '@/components/broadcast/styleComponents';
 import { getRestActions, RequestUrl } from '@/api/myActions';
 
@@ -29,13 +30,14 @@ interface Broadcast {
   streamer: string;
   streamUrl: string;
   streamKey: string;
+  thumbnailImageUrl: string;
   state: 'LIVE' | 'END' | 'READY';
 }
 
 export default function BroadcastInfo() {
   const router = useRouter();
-  const [item, setItem] = useState<Broadcast>();
-  const videoRef = useRef<HTMLVideoElement>(null!);
+  const [item, setItem] = useState<Broadcast | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null!!);
   const [hls, setHls] = useState<Hls | null>(null);
 
   useEffect(() => {
@@ -44,32 +46,30 @@ export default function BroadcastInfo() {
 
     async function fetchData() {
       const fetchData = await getRestActions(RequestUrl.BROADCASTS, id);
+      if (!fetchData) router.push('/home');
       setItem(fetchData.data);
       return fetchData.data;
     }
-    fetchData()
-      .then((data) => {
-        const video: HTMLMediaElement = videoRef.current;
-        const url = data.streamUrl;
 
-        const loadHls = () => {
-          if (video && Hls.isSupported()) {
-            const hlsInstance = new Hls();
-            hlsInstance.loadSource(url);
-            hlsInstance.attachMedia(video);
-            setHls(hlsInstance);
-          } else if (video?.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = url;
-          }
-        };
-
-        loadHls();
-
-        return () => {
-          if (hls) hls.destroy();
-        };
-      });
+    fetchData();
   }, [router.isReady]);
+
+  const play = () => {
+    const video: HTMLMediaElement = videoRef.current;
+
+    if (video && Hls.isSupported()) {
+      const hlsInstance = new Hls();
+      hlsInstance.loadSource(item!.streamUrl);
+      hlsInstance.attachMedia(video);
+      setHls(hlsInstance);
+    } else if (video?.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = item!.streamUrl;
+    }
+
+    if (hls) {
+      hls.destroy();
+    }
+  }
 
   return (
     item ?
@@ -91,7 +91,10 @@ export default function BroadcastInfo() {
             </LiveBadge>
           </LiveBadgeWrap>
         </HeaderWrap>
-        <video ref={videoRef} controls={false} autoPlay={true} muted={true}>
+        { !hls && <ButtonWrap>
+          <Avatar onClick={play} size="xl" color="gradient" icon={<PlayIcon />} />
+        </ButtonWrap> }
+        <video ref={videoRef} controls={false} autoPlay={true} muted={true} poster={item.thumbnailImageUrl}>
           <source src={item.streamUrl} type="application/x-mpegURL"/>
           <script src={item.streamUrl} async/>
         </video>

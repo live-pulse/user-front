@@ -1,3 +1,4 @@
+import { getCookie } from 'cookies-next';
 
 export enum RequestUrl {
   BROADCASTS = '/broadcasts',
@@ -6,13 +7,14 @@ export enum RequestUrl {
 }
 
 export async function postAction<T>(prefixUrl: RequestUrl, request: any) {
+  const auth: string = String(getCookie('auth'));
   try {
     const data = await fetch(`/api${prefixUrl}`, {
       method: 'POST',
       body: JSON.stringify(request),
       headers: {
         'Content-Type': 'application/json',
-        'auth': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjgzMTU3MTM1LCJleHAiOjE2ODMxNjA3MzV9.7G4uLK-1UP4ftFSAKBiRBtsQTkKXaQPoMGr2gu3EamY',
+        'auth': auth,
       }
     });
     const result = await data.json();
@@ -26,8 +28,15 @@ export async function postAction<T>(prefixUrl: RequestUrl, request: any) {
 }
 
 export async function getRestActions<T>(prefixUrl: RequestUrl, request: any) {
+  const auth: string = String(getCookie('auth'));
   try {
-    const data = await fetch(`/api${prefixUrl}/${request}`);
+    const data = await fetch(`/api${prefixUrl}/${request}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth': auth,
+      }
+    });
     const result = await data.json();
     if (result.message !== 'success') throw new Error(result.message);
     return result;

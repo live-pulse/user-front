@@ -7,6 +7,7 @@ import { Mail, Password } from '@/components/svgs/Svgs';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Link from 'next/link';
+import { setCookie } from 'cookies-next';
 
 export default function Users() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function Users() {
     if (result) {
       console.log(result);
       alert('로그인이 완료되었습니다.');
+      setCookie('auth', result.data.token);
       await router.push('/home');
     }
   }

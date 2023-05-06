@@ -69,15 +69,17 @@ export default function BroadcastStream() {
         });
         setStreamVideo(webRTCAdaptor);
       });
-  }, []);
+  }, [router.isReady]);
 
   const start = () => {
-    streamVideo.publish(item?.streamKey);
-    setBroadcastStatus('LIVE');
-  }
+    if (streamVideo) {
+      streamVideo.publish(item!.streamKey);
+      setBroadcastStatus('LIVE');
+    }
+  };
 
   const finish = () => {
-    streamVideo.stop(item?.streamKey);
+    streamVideo.stop(item!.streamKey);
     setBroadcastStatus('END');
   }
 

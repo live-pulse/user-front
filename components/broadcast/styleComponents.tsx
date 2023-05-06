@@ -5,13 +5,20 @@ const BroadcastWrap = styled.div`
   width: 100%;
 
   iframe, video {
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     outline: none;
     border: none;
-    background-color: white;
     object-fit: cover;
+    overflow: hidden;
   }
+`;
+
+const ButtonWrap = styled.div`
+  left: 45%;
+  bottom: 55%;
+  position: absolute;
+  z-index: 10;
 `;
 
 const BottomWrap = styled.div`
@@ -145,4 +152,4 @@ const Chat = styled.span`
   }
 `;
 
-export { BroadcastWrap, HeaderWrap, Header, LiveBadgeWrap, LiveBadge, ViewerCount, BottomWrap, ChatWrap, Chat };
+export { BroadcastWrap, HeaderWrap, Header, LiveBadgeWrap, LiveBadge, ViewerCount, BottomWrap, ChatWrap, Chat, ButtonWrap };
