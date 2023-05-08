@@ -3,7 +3,7 @@
 import { WebRTCAdaptor } from '@antmedia/webrtc_adaptor';
 import { Badge, Button, Input, Loading } from '@nextui-org/react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getRestActions, RequestUrl } from '@/api/myActions';
 import {
   BottomWrap,
@@ -32,9 +32,10 @@ interface Broadcast {
 
 export default function BroadcastStream() {
   const router = useRouter();
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [item, setItem] = useState<Broadcast>();
   const [streamVideo, setStreamVideo] = useState<WebRTCAdaptor>(null!);
-  const [broadcastStatus, setBroadcastStatus] = useState<string>('READY');
+  const [broadcastStatus, setBroadcastStatus] = useState<string>('');
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -68,7 +69,18 @@ export default function BroadcastStream() {
           callbackError: function (error, message) {},
         });
         setStreamVideo(webRTCAdaptor);
+        setBroadcastStatus(data.state);
       });
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then(stream => {
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        })
+        .catch(error => console.log(error));
+    }
   }, [router.isReady]);
 
   const start = () => {
@@ -101,7 +113,7 @@ export default function BroadcastStream() {
             </LiveBadge>
           </LiveBadgeWrap>
         </HeaderWrap>
-        <video id={item.streamKey} autoPlay muted></video>
+        <video ref={videoRef} id={item.streamKey} autoPlay poster={item.thumbnailImageUrl}></video>
         <BottomWrap>
           <div>
             <Input placeholder="채팅을 입력해보세요!"/>
