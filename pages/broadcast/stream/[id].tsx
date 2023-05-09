@@ -27,6 +27,7 @@ interface Broadcast {
   streamer: string;
   streamUrl: string;
   streamKey: string;
+  thumbnailImageUrl: string;
   state: 'LIVE' | 'END' | 'READY';
 }
 
