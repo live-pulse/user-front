@@ -42,7 +42,7 @@ export default function BroadcastInfo() {
 
   useEffect(() => {
     if (!router.isReady) return;
-    const id = Number(router.query.id);
+    const id = router.query.id;
 
     async function fetchData() {
       const fetchData = await getRestActions(RequestUrl.BROADCASTS, id);

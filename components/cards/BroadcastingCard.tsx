@@ -8,6 +8,7 @@ const data = [
     src: 'https://nextui.org/images/card-example-6.jpeg',
     avatarImg: 'https://avatars.githubusercontent.com/u/57277976?v=4',
     title: 'Get Coding With Me',
+    streamKey: 'coding',
     subscribtion: '같이 코딩할 사람',
     tags: ['code', 'coding', 'programming', 'java'],
     streamer: 'Hannah',
@@ -17,6 +18,7 @@ const data = [
     src: 'https://nextui.org/images/card-example-2.jpeg',
     avatarImg: 'https://avatars.githubusercontent.com/u/44762533?v=4',
     title: '마스터 찍을 때 까지 노방종',
+    streamKey: 'master',
     subscribtion: '마스터 찍기 프로젝트 3일차',
     tags: ['lol', 'master', 'league of legends', 'league'],
     streamer: 'Hwasowl',
@@ -26,6 +28,7 @@ const data = [
     src: 'https://nextui.org/images/card-example-3.jpeg',
     avatarImg: 'https://i.pravatar.cc/150?u=a042581f4e29026024d',
     title: 'The Best of 2022',
+    streamKey: 'language',
     subscribtion: '2022년 가장 인기있었던 언어 톺아보기',
     tags: ['python', 'java', 'javascript', 'c++'],
     streamer: 'Joe',
@@ -35,6 +38,7 @@ const data = [
     src: 'https://nextui.org/images/card-example-4.jpeg',
     avatarImg: 'https://avatars.githubusercontent.com/u/112460618?s=200&v=4',
     title: '타임 세일 중',
+    streamKey: 'sale',
     subscribtion: '봄맞이 신상 의류 세일',
     tags: ['스웨터', '반팔', '반바지', '바지'],
     streamer: 'John',
@@ -44,7 +48,7 @@ const data = [
 export default function BroadcastingCard() {
   return <CardListWrap>
     {data.map((item) => {
-      return <Link href={`/broadcast/${item.id}`} key={item.id}>
+      return <Link href={`/broadcast/${item.streamKey}`} key={item.id}>
         <CardWrap>
           <LiveBadge>
             <Grid>

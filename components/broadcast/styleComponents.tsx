@@ -4,13 +4,12 @@ const BroadcastWrap = styled.div`
   height: 100vh;
   width: 100%;
 
-  iframe, video {
+  video {
     width: 100vw;
     height: 100vh;
     outline: none;
     border: none;
     object-fit: cover;
-    overflow: hidden;
   }
 `;
 

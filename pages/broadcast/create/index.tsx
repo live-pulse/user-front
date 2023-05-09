@@ -3,9 +3,10 @@
 import styled from 'styled-components';
 import { Button, Checkbox, Input, Textarea } from '@nextui-org/react';
 import { CameraIcon } from '@/components/svgs/Svgs';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { postAction, RequestUrl } from '@/api/myActions';
+import { getCookie } from 'cookies-next';
 
 export default function CreateBroadcast() {
   const tagData = ["게임", "먹방", "일상", "공부", "쇼핑"];
@@ -22,6 +23,16 @@ export default function CreateBroadcast() {
   const onStartDate = (e) => setStartDate(e.currentTarget.value);
   const [tags, setTags] = useState<string[]>([]);
 
+  useEffect(() => {
+    if (router.isReady) {
+      const auth = getCookie('auth');
+      if (!auth) {
+        alert('로그인이 필요합니다.');
+        router.push('/users');
+      }
+    }
+  }, [router.isReady])
+
   const create = async () => {
     const date = new Date;
     date.setHours(Number(startDate.split(':')[0]));
@@ -37,7 +48,7 @@ export default function CreateBroadcast() {
     if (result) {
       console.log(result);
       alert('방송이 생성되었습니다');
-      router.push(`/broadcast/stream/${result.data.id}`);
+      router.push(`/broadcast/stream/${result.data.streamKey}`);
     }
   }
 

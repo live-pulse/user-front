@@ -26,7 +26,7 @@ export default function Users() {
     if (result) {
       console.log(result);
       alert('로그인이 완료되었습니다.');
-      setCookie('auth', result.data.token);
+      setCookie('auth', result.data.token, { maxAge: 60 * 60 });
       await router.push('/home');
     }
   }
@@ -81,6 +81,6 @@ export default function Users() {
 const BackGroundImage = styled.div`
   height: 100vh;
   width: 100%;
-  background-image: url('https://g-grafolio.pstatic.net/20230423_277/1682246003950urmU4_PNG/%B8%AE%BF%A5_%B8%BB%B6%FB%B0%F5_%C0%DC%B5%F0%B9%E7.png');
+  background-image: url('https://g-grafolio.pstatic.net/20220406_116/1649215060171sLWlQ_JPEG/%C1%A6%B8%F1_%BE%F8%C0%BD-1_%BA%B9%BB%E72.jpg');
   background-size: cover;
 `;
