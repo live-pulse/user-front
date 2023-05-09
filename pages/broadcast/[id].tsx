@@ -16,7 +16,7 @@ import {
   LiveBadge,
   LiveBadgeWrap,
   ViewerCount,
-  ButtonWrap,
+  ButtonWrap, VideoWrap,
 } from '@/components/broadcast/styleComponents';
 import { getRestActions, RequestUrl } from '@/api/myActions';
 
@@ -55,6 +55,8 @@ export default function BroadcastInfo() {
   }, [router.isReady]);
 
   const play = () => {
+    if (item!.state !== 'LIVE') alert('방송이 시작되지 않았습니다.');
+
     const video: HTMLMediaElement = videoRef.current;
 
     if (video && Hls.isSupported()) {
@@ -94,10 +96,12 @@ export default function BroadcastInfo() {
         { !hls && <ButtonWrap>
           <Avatar onClick={play} size="xl" color="gradient" icon={<PlayIcon />} />
         </ButtonWrap> }
-        <video ref={videoRef} controls={false} autoPlay={true} muted={true} poster={item.thumbnailImageUrl}>
-          <source src={item.streamUrl} type="application/x-mpegURL"/>
-          <script src={item.streamUrl} async/>
-        </video>
+        <VideoWrap>
+          <video ref={videoRef} controls={false} autoPlay={true} muted={true} poster={item.thumbnailImageUrl}>
+            <source src={item.streamUrl} type="application/x-mpegURL"/>
+            <script src={item.streamUrl} async/>
+          </video>
+        </VideoWrap>
         <BottomWrap>
           <div>
             <Input placeholder="채팅을 입력해보세요!"/>

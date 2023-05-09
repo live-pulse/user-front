@@ -3,14 +3,6 @@ import styled from 'styled-components';
 const BroadcastWrap = styled.div`
   height: 100vh;
   width: 100%;
-
-  video {
-    width: 100vw;
-    height: 100vh;
-    outline: none;
-    border: none;
-    object-fit: cover;
-  }
 `;
 
 const ButtonWrap = styled.div`
@@ -151,4 +143,18 @@ const Chat = styled.span`
   }
 `;
 
-export { BroadcastWrap, HeaderWrap, Header, LiveBadgeWrap, LiveBadge, ViewerCount, BottomWrap, ChatWrap, Chat, ButtonWrap };
+const VideoWrap = styled.div`
+  left: 50%;
+  position: fixed;
+  transform: translateX(-50%);
+  overflow: hidden;
+  
+  video {
+    height: 100vh;
+    outline: none;
+    border: none;
+    object-fit: cover;
+  }
+`;
+
+export { BroadcastWrap, HeaderWrap, Header, LiveBadgeWrap, LiveBadge, ViewerCount, BottomWrap, ChatWrap, Chat, ButtonWrap, VideoWrap };

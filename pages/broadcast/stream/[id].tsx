@@ -13,7 +13,7 @@ import {
   Header,
   HeaderWrap,
   LiveBadge,
-  LiveBadgeWrap,
+  LiveBadgeWrap, VideoWrap,
   ViewerCount
 } from '@/components/broadcast/styleComponents';
 
@@ -96,7 +96,8 @@ export default function BroadcastStream() {
   }
 
   return (
-    item ? <BroadcastWrap>
+    item ?
+      <BroadcastWrap>
         <HeaderWrap>
           <Header>
             <h3>{item.title}</h3>
@@ -113,7 +114,9 @@ export default function BroadcastStream() {
             </LiveBadge>
           </LiveBadgeWrap>
         </HeaderWrap>
-        <video ref={videoRef} id={item.streamKey} autoPlay poster={item.thumbnailImageUrl}></video>
+        <VideoWrap>
+          <video ref={videoRef} id={item.streamKey} autoPlay poster={item.thumbnailImageUrl}></video>
+        </VideoWrap>
         <BottomWrap>
           <div>
             <Input placeholder="채팅을 입력해보세요!"/>
