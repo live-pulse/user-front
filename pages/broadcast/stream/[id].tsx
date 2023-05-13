@@ -126,8 +126,7 @@ export default function BroadcastStream() {
         <BottomWrap>
           <ChatInputWrap>
             <Input placeholder="채팅을 입력해보세요!"/>
-            {broadcastStatus === 'READY' &&
-              <Button onPress={start} color="gradient" style={{width: '100%'}}>방송 시작</Button>}
+              <Button onPress={start} color="gradient" style={{width: '100%'}}>방송 시작</Button>
             {broadcastStatus === 'LIVE' &&
               <Button onPress={finish} color="gradient" style={{width: '100%'}}>방송 종료</Button>}
           </ChatInputWrap>
