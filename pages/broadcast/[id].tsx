@@ -178,7 +178,7 @@ export default function BroadcastInfo() {
             </LiveBadge>
           </LiveBadgeWrap>
         </HeaderWrap>
-        { broadcast.state !== 'LIVE' && <ButtonWrap>
+        { !hls && <ButtonWrap>
           <Avatar onClick={play} size="xl" color="gradient" icon={<PlayIcon />} />
         </ButtonWrap> }
         <VideoWrap>
