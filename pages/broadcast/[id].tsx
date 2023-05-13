@@ -43,7 +43,7 @@ interface User {
 
 interface ChatList {
   userId: string;
-  userName: string;
+  name: string;
   message: string;
 }
 
@@ -55,7 +55,7 @@ export default function BroadcastInfo() {
   const [user, setUser] = useState<User | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [chatList, setChatList] = useState<ChatList[]>([]);
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<string>('');
   const onMessage = (e) => setMessage(e.currentTarget.value);
 
   const videoRef = useRef<HTMLVideoElement>(null!!);
