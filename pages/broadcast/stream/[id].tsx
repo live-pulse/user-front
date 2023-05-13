@@ -14,7 +14,8 @@ import {
   HeaderWrap,
   LiveBadge,
   LiveBadgeWrap, VideoWrap,
-  ViewerCount
+  ViewerCount,
+  ChatInputWrap
 } from '@/components/broadcast/styleComponents';
 
 interface Broadcast {
@@ -88,7 +89,7 @@ export default function BroadcastStream() {
     if (streamVideo && item) {
       streamVideo.publish(item.streamKey);
       setBroadcastStatus('LIVE');
-      await broadcastStartActions(item.streamKey);
+      // await broadcastStartActions(item.streamKey);
     }
   };
 
@@ -96,7 +97,7 @@ export default function BroadcastStream() {
     if (item) {
       streamVideo.stop(item.streamKey);
       setBroadcastStatus('END');
-      await broadcastFinishActions(item.streamKey);
+      // await broadcastFinishActions(item.streamKey);
     }
   }
 
@@ -123,13 +124,13 @@ export default function BroadcastStream() {
           <video ref={videoRef} id={item.streamKey} autoPlay poster={item.thumbnailImageUrl}></video>
         </VideoWrap>
         <BottomWrap>
-          <div>
+          <ChatInputWrap>
             <Input placeholder="채팅을 입력해보세요!"/>
             {broadcastStatus === 'READY' &&
               <Button onPress={start} color="gradient" style={{width: '100%'}}>방송 시작</Button>}
             {broadcastStatus === 'LIVE' &&
               <Button onPress={finish} color="gradient" style={{width: '100%'}}>방송 종료</Button>}
-          </div>
+          </ChatInputWrap>
           <ChatWrap>
             <Chat><h6>안녕나잼민4</h6>형형 칼바람 해줘</Chat>
             <Chat><h6>안녕나잼민3</h6>ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ</Chat>
