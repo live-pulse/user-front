@@ -4,7 +4,7 @@ import { WebRTCAdaptor } from '@antmedia/webrtc_adaptor';
 import { Badge, Button, Input, Loading } from '@nextui-org/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useRef } from 'react';
-import { getRestActions, RequestUrl } from '@/api/myActions';
+import { broadcastFinishActions, broadcastStartActions, getRestActions, RequestUrl } from '@/api/myActions';
 import {
   BottomWrap,
   BroadcastWrap,
@@ -84,16 +84,20 @@ export default function BroadcastStream() {
     }
   }, [router.isReady]);
 
-  const start = () => {
-    if (streamVideo) {
-      streamVideo.publish(item!.streamKey);
+  const start = async () => {
+    if (streamVideo && item) {
+      streamVideo.publish(item.streamKey);
       setBroadcastStatus('LIVE');
+      await broadcastStartActions(item.streamKey);
     }
   };
 
-  const finish = () => {
-    streamVideo.stop(item!.streamKey);
-    setBroadcastStatus('END');
+  const finish = async () => {
+    if (item) {
+      streamVideo.stop(item.streamKey);
+      setBroadcastStatus('END');
+      await broadcastFinishActions(item.streamKey);
+    }
   }
 
   return (

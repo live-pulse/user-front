@@ -29,17 +29,14 @@ const BottomWrap = styled.div`
   background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgb(0 0 0 / 0%) 100%);
   -webkit-mask-image: linear-gradient(transparent, #fff 30px);
 
-  input {
-    width: 87vw;
-  }
-
   label {
     color: #f1f3f5cc !important;
   }
-  
+
   button {
     margin-top: 0.5rem;
-  };
+  }
+;
 `;
 
 const HeaderWrap = styled.div`
@@ -58,6 +55,7 @@ const HeaderWrap = styled.div`
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
+
   h3 {
     margin: 0 !important;
   }
@@ -67,7 +65,7 @@ const LiveBadgeWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  
+
   div > span > span {
     position: absolute;
     margin-top: -14px;
@@ -136,11 +134,18 @@ const Chat = styled.span`
   padding: 0.25rem 0.5rem 0.25rem 0.5rem;
   margin: 5px 0 2.5px 0;
   width: 100%;
-  
+
   h6 {
     margin: 0 !important;
     font-weight: bolder;
   }
+`;
+
+const ChatInputWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  calc(var(--nextui--inputHeightRatio) * var(--nextui-space-9));
 `;
 
 const VideoWrap = styled.div`
@@ -148,7 +153,7 @@ const VideoWrap = styled.div`
   position: fixed;
   transform: translateX(-50%);
   overflow: hidden;
-  
+
   video {
     height: 100vh;
     outline: none;
@@ -157,4 +162,17 @@ const VideoWrap = styled.div`
   }
 `;
 
-export { BroadcastWrap, HeaderWrap, Header, LiveBadgeWrap, LiveBadge, ViewerCount, BottomWrap, ChatWrap, Chat, ButtonWrap, VideoWrap };
+export {
+  BroadcastWrap,
+  HeaderWrap,
+  Header,
+  LiveBadgeWrap,
+  LiveBadge,
+  ViewerCount,
+  BottomWrap,
+  ChatWrap,
+  Chat,
+  ButtonWrap,
+  VideoWrap,
+  ChatInputWrap
+};

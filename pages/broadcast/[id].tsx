@@ -5,20 +5,22 @@ import { useRouter } from 'next/router';
 import Hls from 'hls.js';
 import Link from 'next/link';
 import { outIcon, PlayIcon } from '@/components/svgs/Svgs';
-import { Avatar, Badge, Input, Loading } from '@nextui-org/react';
+import { Avatar, Badge, Input, Loading, Button } from '@nextui-org/react';
 import {
   BottomWrap,
   BroadcastWrap,
-  Chat,
+  ChatInputWrap,
   ChatWrap,
   Header,
   HeaderWrap,
   LiveBadge,
   LiveBadgeWrap,
   ViewerCount,
-  ButtonWrap, VideoWrap,
+  ButtonWrap, VideoWrap, Chat,
 } from '@/components/broadcast/styleComponents';
 import { getRestActions, RequestUrl } from '@/api/myActions';
+import io, { Socket } from 'socket.io-client';
+import { getCookie } from 'cookies-next';
 
 interface Broadcast {
   id: number;
@@ -34,38 +36,121 @@ interface Broadcast {
   state: 'LIVE' | 'END' | 'READY';
 }
 
+interface User {
+  userId: string;
+  name: string;
+}
+
+interface ChatList {
+  userId: string;
+  userName: string;
+  message: string;
+}
+
 export default function BroadcastInfo() {
   const router = useRouter();
-  const [item, setItem] = useState<Broadcast | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null!!);
+
   const [hls, setHls] = useState<Hls | null>(null);
+  const [broadcast, setBroadcast] = useState<Broadcast | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [chatList, setChatList] = useState<ChatList[]>([]);
+  const [message, setMessage] = useState<string | null>(null);
+  const onMessage = (e) => setMessage(e.currentTarget.value);
+
+  const videoRef = useRef<HTMLVideoElement>(null!!);
 
   useEffect(() => {
     if (!router.isReady) return;
     const id = router.query.id;
 
-    async function fetchData() {
+    const auth = getCookie('auth');
+    if (!auth) {
+      alert('로그인이 필요합니다.');
+      router.push('/users');
+    }
+
+    async function fetchBroadcastData() {
       const fetchData = await getRestActions(RequestUrl.BROADCASTS, id);
       if (!fetchData) router.push('/home');
-      setItem(fetchData.data);
+      setBroadcast(fetchData.data);
       return fetchData.data;
     }
 
-    fetchData();
+    async function fetchUserData() {
+      const fetchData = await getRestActions(RequestUrl.USERS, null);
+      setUser(fetchData.data);
+      return fetchData.data;
+    }
+
+    fetchBroadcastData();
+    fetchUserData();
   }, [router.isReady]);
 
+  useEffect(() => {
+    if (!broadcast || !user) return;
+    const url: string = `${process.env.NEXT_PUBLIC_SOCKET_CHAT_URL}?streamKey=${broadcast.streamKey}&user=${user.name}`;
+    const initSocketObject = io(url, { transports: ['websocket'] });
+    setSocket(initSocketObject);
+  }, [!socket, !broadcast, !user])
+
+  useEffect(() => {
+    if (socket) {
+      getLastChat();
+
+      socket.on('sendMessage', (data: ChatList) => {
+        setChatList([...chatList, data]);
+      });
+
+      socket.on('disconnect', () => {
+        console.log('disconnect');
+      });
+    }
+  }, [socket]);
+
+  const getLastChat = () => {
+    if (socket) {
+      socket.emit('getLastChat', (data) => {
+        console.log(data);
+      });
+
+      socket.on('getLastChat', (data: ChatList[]) => {
+        setChatList(data);
+      });
+    }
+  };
+
+  const sendMessage = () => {
+    if (socket) {
+      if (!message) {
+        alert('메세지를 입력해주세요.');
+        return;
+      };
+
+      socket.emit('sendMessage', {
+        streamKey: broadcast?.streamKey,
+        userId: user?.userId,
+        name: user?.name,
+        message: message,
+      });
+    }
+  }
+
   const play = () => {
-    if (item!.state !== 'LIVE') alert('방송이 시작되지 않았습니다.');
+    if (broadcast!.state !== 'LIVE') {
+      alert('방송이 시작되지 않았습니다.');
+      return;
+    }
 
     const video: HTMLMediaElement = videoRef.current;
 
     if (video && Hls.isSupported()) {
       const hlsInstance = new Hls();
-      hlsInstance.loadSource(item!.streamUrl);
+      hlsInstance.loadSource(broadcast!.streamUrl);
       hlsInstance.attachMedia(video);
       setHls(hlsInstance);
     } else if (video?.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = item!.streamUrl;
+      video.src = broadcast!.streamUrl;
     }
 
     if (hls) {
@@ -74,15 +159,15 @@ export default function BroadcastInfo() {
   }
 
   return (
-    item ?
+    broadcast ?
       <BroadcastWrap>
         <HeaderWrap>
           <Header>
-            <h3>{item.title}</h3>
+            <h3>{broadcast.title}</h3>
             <Link href={'/home'}>{outIcon({width: 35, height: 35})}</Link>
           </Header>
           <LiveBadgeWrap>
-            <span>{item.streamer}</span>
+            <span>{broadcast.streamer}</span>
             <LiveBadge>
               <Badge enableShadow disableOutline color="error">
                 Live
@@ -93,26 +178,31 @@ export default function BroadcastInfo() {
             </LiveBadge>
           </LiveBadgeWrap>
         </HeaderWrap>
-        { !hls && <ButtonWrap>
+        { broadcast.state !== 'LIVE' && <ButtonWrap>
           <Avatar onClick={play} size="xl" color="gradient" icon={<PlayIcon />} />
         </ButtonWrap> }
         <VideoWrap>
-          <video ref={videoRef} controls={false} autoPlay={true} muted={true} poster={item.thumbnailImageUrl}>
-            <source src={item.streamUrl} type="application/x-mpegURL"/>
-            <script src={item.streamUrl} async/>
+          <video ref={videoRef} controls={false} autoPlay={true} muted={true} poster={broadcast.thumbnailImageUrl}>
+            <source src={broadcast.streamUrl} type="application/x-mpegURL"/>
+            <script src={broadcast.streamUrl} async/>
           </video>
         </VideoWrap>
         <BottomWrap>
-          <div>
-            <Input placeholder="채팅을 입력해보세요!"/>
-          </div>
+          <ChatInputWrap>
+            <Input fullWidth placeholder="채팅을 입력해보세요!" value={message} onChange={onMessage} />
+            <Button auto color="gradient" onPress={sendMessage}>
+              전송
+            </Button>
+          </ChatInputWrap>
           <ChatWrap>
-            <Chat><h6>안녕나잼민4</h6>형형 칼바람 해줘</Chat>
-            <Chat><h6>안녕나잼민3</h6>ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ</Chat>
-            <Chat><h6>롤창</h6>개못하네 ㅋㅋㅋ</Chat>
-            <Chat><h6>안녕나잼민1</h6>롤 BJ가 게임을 발로 한다?!</Chat>
-            <Chat><h6>안녕나잼민2</h6>zzzzzzzzzzzzzzzzzzzz</Chat>
-            <Chat><h6>ㄱㅇㄱ</h6>와 방금 개쩔었다 제우스인줄</Chat>
+            {chatList.map((chat, index) => {
+              const { name, message } = chat;
+              return (
+                <Chat key={index}>
+                  <h6>{name}</h6>{message}
+                </Chat>
+              )
+            })}
           </ChatWrap>
         </BottomWrap>
       </BroadcastWrap>
