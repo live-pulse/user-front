@@ -49,9 +49,14 @@ export async function getRestActions<T>(prefixUrl: RequestUrl, request: any | nu
 }
 
 export async function broadcastStartActions<T>(streamKey: string) {
+  const auth: string = String(getCookie('auth'));
   try {
-    const data = await fetch(`/broadcasts/${streamKey}/start`, {
+    const data = await fetch(`/api/broadcasts/${streamKey}/start`, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth': auth,
+      }
     });
     const result = await data.json();
     if (result.message !== 'success') throw new Error(result.message);
@@ -64,9 +69,14 @@ export async function broadcastStartActions<T>(streamKey: string) {
 }
 
 export async function broadcastFinishActions<T>(streamKey: string) {
+  const auth: string = String(getCookie('auth'));
   try {
-    const data = await fetch(`/broadcasts/${streamKey}/finish`, {
+    const data = await fetch(`/api/broadcasts/${streamKey}/finish`, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth': auth,
+      }
     });
     const result = await data.json();
     if (result.message !== 'success') throw new Error(result.message);

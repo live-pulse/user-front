@@ -95,23 +95,24 @@ export default function BroadcastInfo() {
   }, [router.isReady]);
 
   useEffect(() => {
-    if (!broadcast || !user) return;
-    const url: string = `${process.env.NEXT_PUBLIC_SOCKET_CHAT_URL}?streamKey=${broadcast.streamKey}&user=${user.name}`;
-    const initSocketObject = io(url, { transports: ['websocket'] });
-    setSocket(initSocketObject);
-  }, [!socket, !broadcast, !user])
+    if (broadcast && user && !socket) {
+      const url: string = `${process.env.NEXT_PUBLIC_SOCKET_CHAT_URL}?streamKey=${broadcast.streamKey}&user=${user.name}`;
+      const initSocketObject = io(url, { transports: ['websocket'] });
+      setSocket(initSocketObject);
+    }
+  }, [!socket && broadcast && user]);
 
   useEffect(() => {
     if (socket) {
       getLastChat();
 
       socket.on('sendMessage', (data: ChatList) => {
-        const setData = [...chatList, data];
-        setChatList(setData);
+        setChatList(prevList => [...prevList, data]);
+        setMessage('');
       });
 
       socket.on('disconnect', () => {
-        console.log('disconnect');
+        setSocket(null);
       });
     }
   }, [socket]);

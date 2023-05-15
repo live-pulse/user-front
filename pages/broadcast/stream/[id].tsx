@@ -17,6 +17,7 @@ import {
   ViewerCount,
   ChatInputWrap
 } from '@/components/broadcast/styleComponents';
+import io, { Socket } from "socket.io-client";
 
 enum BroadcastState {
   READY = 'READY',
@@ -38,10 +39,28 @@ interface Broadcast {
   state: BroadcastState;
 }
 
+interface User {
+  userId: string;
+  name: string;
+}
+
+interface ChatList {
+  streamKey: string;
+  userId: string;
+  name: string;
+  message: string;
+}
+
 export default function BroadcastStream() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [broadcast, setBroadcast] = useState<Broadcast>();
+  const [user, setUser] = useState<User>();
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [chatList, setChatList] = useState<ChatList[]>([]);
+  const [message, setMessage] = useState<string>('');
+  const onMessage = (e) => setMessage(e.currentTarget.value);
+
   const [streamVideo, setStreamVideo] = useState<WebRTCAdaptor>(null!);
   const [broadcastStatus, setBroadcastStatus] = useState<BroadcastState>(BroadcastState.READY);
 
@@ -49,13 +68,20 @@ export default function BroadcastStream() {
     if (!router.isReady) return;
     const id = router.query.id;
 
-    async function fetchData() {
+    async function fetchBroadcastData() {
       const fetchData = await getRestActions(RequestUrl.BROADCASTS, id);
       setBroadcast(fetchData.data);
       return fetchData.data;
     }
 
-    fetchData()
+    async function fetchUserData() {
+      const fetchData = await getRestActions(RequestUrl.USERS, null);
+      setUser(fetchData.data);
+      return fetchData.data;
+    }
+
+    fetchUserData();
+    fetchBroadcastData()
       .then((data) => {
         const webRTCAdaptor = new WebRTCAdaptor({
           websocket_url: process.env.NEXT_PUBLIC_SOCKET_URL,
@@ -90,6 +116,55 @@ export default function BroadcastStream() {
         .catch(error => console.log(error));
     }
   }, [router.isReady]);
+
+  useEffect(() => {
+    if (broadcast && user && !socket) {
+      const url: string = `${process.env.NEXT_PUBLIC_SOCKET_CHAT_URL}?streamKey=${broadcast.streamKey}&user=${user.name}`;
+      const initSocketObject = io(url, { transports: ['websocket'] });
+      setSocket(initSocketObject);
+    }
+  }, [!socket && broadcast && user]);
+
+  useEffect(() => {
+    if (socket) {
+      getLastChat();
+
+      socket.on('sendMessage', (data: ChatList) => {
+        setChatList(prevList => [...prevList, data]);
+        setMessage('');
+      });
+
+      socket.on('disconnect', () => {
+        setSocket(null);
+      });
+    }
+  }, [socket]);
+
+  const getLastChat = () => {
+    if (socket) {
+      socket.emit('getLastChat');
+      socket.on('getLastChat', (data: ChatList[]) => {
+        setChatList(data);
+      });
+    }
+  };
+
+  const sendMessage = () => {
+    if (socket && user && broadcast) {
+      if (!message) {
+        alert('메세지를 입력해주세요.');
+        return;
+      }
+
+      const request: ChatList = {
+        streamKey: broadcast?.streamKey,
+        userId: user?.userId,
+        name: user?.name,
+        message: message,
+      }
+      socket.emit('sendMessage', request);
+    }
+  }
 
   const start = async () => {
     if (streamVideo && broadcast) {
@@ -134,16 +209,18 @@ export default function BroadcastStream() {
         </VideoWrap>
         <BottomStreamWrap>
           <ChatInputWrap>
-            <Input fullWidth placeholder="채팅을 입력해보세요!"/>
-            <Button auto color="gradient">전송</Button>
+            <Input fullWidth placeholder="채팅을 입력해보세요!" value={message} onChange={onMessage} />
+            <Button auto color="gradient" onPress={sendMessage}>전송</Button>
           </ChatInputWrap>
           <ChatWrap>
-            <Chat><h6>안녕나잼민4</h6>형형 칼바람 해줘</Chat>
-            <Chat><h6>안녕나잼민3</h6>ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ</Chat>
-            <Chat><h6>롤창</h6>개못하네 ㅋㅋㅋ</Chat>
-            <Chat><h6>안녕나잼민1</h6>롤 BJ가 게임을 발로 한다?!</Chat>
-            <Chat><h6>안녕나잼민2</h6>zzzzzzzzzzzzzzzzzzzz</Chat>
-            <Chat><h6>ㄱㅇㄱ</h6>와 방금 개쩔었다 제우스인줄</Chat>
+            {chatList.map((chat, index) => {
+              const { name, message } = chat;
+              return (
+                <Chat key={index}>
+                  <h6>{name}</h6>{message}
+                </Chat>
+              )
+            })}
           </ChatWrap>
         </BottomStreamWrap>
       </BroadcastWrap>
