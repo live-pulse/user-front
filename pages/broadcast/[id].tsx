@@ -48,6 +48,7 @@ interface User {
 }
 
 interface ChatList {
+  streamKey: string;
   userId: string;
   name: string;
   message: string;
@@ -125,7 +126,7 @@ export default function BroadcastInfo() {
   };
 
   const sendMessage = () => {
-    if (socket) {
+    if (socket && user && broadcast) {
       if (!message) {
         alert('메세지를 입력해주세요.');
         return;
