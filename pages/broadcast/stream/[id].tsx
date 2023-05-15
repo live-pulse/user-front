@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState, useRef } from 'react';
 import { broadcastFinishActions, broadcastStartActions, getRestActions, RequestUrl } from '@/api/myActions';
 import {
-  BottomWrap,
+  BottomStreamWrap,
   BroadcastWrap,
   Chat,
   ChatWrap,
@@ -17,6 +17,12 @@ import {
   ViewerCount,
   ChatInputWrap
 } from '@/components/broadcast/styleComponents';
+
+enum BroadcastState {
+  READY = 'READY',
+  BROADCASTING = 'BROADCASTING',
+  FINISHED = 'FINISHED',
+}
 
 interface Broadcast {
   id: number;
@@ -29,15 +35,15 @@ interface Broadcast {
   streamUrl: string;
   streamKey: string;
   thumbnailImageUrl: string;
-  state: 'LIVE' | 'END' | 'READY';
+  state: BroadcastState;
 }
 
 export default function BroadcastStream() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [item, setItem] = useState<Broadcast>();
+  const [broadcast, setBroadcast] = useState<Broadcast>();
   const [streamVideo, setStreamVideo] = useState<WebRTCAdaptor>(null!);
-  const [broadcastStatus, setBroadcastStatus] = useState<string>('');
+  const [broadcastStatus, setBroadcastStatus] = useState<BroadcastState>(BroadcastState.READY);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -45,7 +51,7 @@ export default function BroadcastStream() {
 
     async function fetchData() {
       const fetchData = await getRestActions(RequestUrl.BROADCASTS, id);
-      setItem(fetchData.data);
+      setBroadcast(fetchData.data);
       return fetchData.data;
     }
 
@@ -86,49 +92,50 @@ export default function BroadcastStream() {
   }, [router.isReady]);
 
   const start = async () => {
-    if (streamVideo && item) {
-      streamVideo.publish(item.streamKey);
-      setBroadcastStatus('LIVE');
-      // await broadcastStartActions(item.streamKey);
+    if (streamVideo && broadcast) {
+      streamVideo.publish(broadcast.streamKey);
+      setBroadcastStatus(BroadcastState.BROADCASTING);
+      await broadcastStartActions(broadcast.streamKey);
     }
   };
 
   const finish = async () => {
-    if (item) {
-      streamVideo.stop(item.streamKey);
-      setBroadcastStatus('END');
-      // await broadcastFinishActions(item.streamKey);
+    if (broadcast) {
+      streamVideo.stop(broadcast.streamKey);
+      setBroadcastStatus(BroadcastState.FINISHED);
+      await broadcastFinishActions(broadcast.streamKey);
     }
   }
 
   return (
-    item ?
+    broadcast ?
       <BroadcastWrap>
         <HeaderWrap>
           <Header>
-            <h3>{item.title}</h3>
+            <h3>{broadcast.title}</h3>
+            { broadcastStatus === BroadcastState.READY &&
+              <Button auto onPress={start} color="error" size="sm">방송 시작</Button> }
+            { broadcastStatus === BroadcastState.BROADCASTING &&
+              <Button auto onPress={finish} color="error" size="sm">방송 종료</Button> }
           </Header>
           <LiveBadgeWrap>
-            <span>{item.streamer}</span>
-            <LiveBadge>
-              <Badge enableShadow disableOutline color="error">
-                Live
-              </Badge>
-              <ViewerCount>
-                13,622
-              </ViewerCount>
-            </LiveBadge>
+            <span>{broadcast.streamer}</span>
+            { broadcastStatus === BroadcastState.READY && <>
+              <Badge enableShadow disableOutline>Ready</Badge>
+            </> }
+            { broadcastStatus === BroadcastState.BROADCASTING && <LiveBadge>
+              <Badge enableShadow disableOutline color="error">Live</Badge>
+              <ViewerCount>13,622</ViewerCount>
+            </LiveBadge> }
           </LiveBadgeWrap>
         </HeaderWrap>
         <VideoWrap>
-          <video ref={videoRef} id={item.streamKey} autoPlay poster={item.thumbnailImageUrl}></video>
+          <video ref={videoRef} id={broadcast.streamKey} autoPlay poster={broadcast.thumbnailImageUrl}></video>
         </VideoWrap>
-        <BottomWrap>
+        <BottomStreamWrap>
           <ChatInputWrap>
-            <Input placeholder="채팅을 입력해보세요!"/>
-              <Button onPress={start} color="gradient" style={{width: '100%'}}>방송 시작</Button>
-            {broadcastStatus === 'LIVE' &&
-              <Button onPress={finish} color="gradient" style={{width: '100%'}}>방송 종료</Button>}
+            <Input fullWidth placeholder="채팅을 입력해보세요!"/>
+            <Button auto color="gradient">전송</Button>
           </ChatInputWrap>
           <ChatWrap>
             <Chat><h6>안녕나잼민4</h6>형형 칼바람 해줘</Chat>
@@ -138,7 +145,7 @@ export default function BroadcastStream() {
             <Chat><h6>안녕나잼민2</h6>zzzzzzzzzzzzzzzzzzzz</Chat>
             <Chat><h6>ㄱㅇㄱ</h6>와 방금 개쩔었다 제우스인줄</Chat>
           </ChatWrap>
-        </BottomWrap>
+        </BottomStreamWrap>
       </BroadcastWrap>
       : <Loading type="points" color="currentColor" size="lg"/>
   );

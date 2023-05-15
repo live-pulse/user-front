@@ -22,6 +22,12 @@ import { getRestActions, RequestUrl } from '@/api/myActions';
 import io, { Socket } from 'socket.io-client';
 import { getCookie } from 'cookies-next';
 
+enum BroadcastState {
+  READY = 'READY',
+  BROADCASTING = 'BROADCASTING',
+  FINISHED = 'FINISHED',
+}
+
 interface Broadcast {
   id: number;
   src: string;
@@ -33,7 +39,7 @@ interface Broadcast {
   streamUrl: string;
   streamKey: string;
   thumbnailImageUrl: string;
-  state: 'LIVE' | 'END' | 'READY';
+  state: BroadcastState;
 }
 
 interface User {
@@ -73,7 +79,7 @@ export default function BroadcastInfo() {
     async function fetchBroadcastData() {
       const fetchData = await getRestActions(RequestUrl.BROADCASTS, id);
       if (!fetchData) router.push('/home');
-      setBroadcast(fetchData.data);
+      setBroadcast(fetchData?.data);
       return fetchData.data;
     }
 
@@ -99,7 +105,8 @@ export default function BroadcastInfo() {
       getLastChat();
 
       socket.on('sendMessage', (data: ChatList) => {
-        setChatList([...chatList, data]);
+        const setData = [...chatList, data];
+        setChatList(setData);
       });
 
       socket.on('disconnect', () => {
@@ -110,10 +117,7 @@ export default function BroadcastInfo() {
 
   const getLastChat = () => {
     if (socket) {
-      socket.emit('getLastChat', (data) => {
-        console.log(data);
-      });
-
+      socket.emit('getLastChat');
       socket.on('getLastChat', (data: ChatList[]) => {
         setChatList(data);
       });
@@ -125,36 +129,39 @@ export default function BroadcastInfo() {
       if (!message) {
         alert('메세지를 입력해주세요.');
         return;
-      };
+      }
 
-      socket.emit('sendMessage', {
+      const request: ChatList = {
         streamKey: broadcast?.streamKey,
         userId: user?.userId,
         name: user?.name,
         message: message,
-      });
+      }
+      socket.emit('sendMessage', request);
     }
   }
 
   const play = () => {
-    if (broadcast!.state !== 'LIVE') {
-      alert('방송이 시작되지 않았습니다.');
-      return;
-    }
+    if (broadcast) {
+      if (broadcast.state !== BroadcastState.BROADCASTING) {
+        alert('방송이 시작되지 않았습니다.');
+        return;
+      }
 
-    const video: HTMLMediaElement = videoRef.current;
+      const video: HTMLMediaElement = videoRef.current;
 
-    if (video && Hls.isSupported()) {
-      const hlsInstance = new Hls();
-      hlsInstance.loadSource(broadcast!.streamUrl);
-      hlsInstance.attachMedia(video);
-      setHls(hlsInstance);
-    } else if (video?.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = broadcast!.streamUrl;
-    }
+      if (video && Hls.isSupported()) {
+        const hlsInstance = new Hls();
+        hlsInstance.loadSource(broadcast.streamUrl);
+        hlsInstance.attachMedia(video);
+        setHls(hlsInstance);
+      } else if (video?.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = broadcast.streamUrl;
+      }
 
-    if (hls) {
-      hls.destroy();
+      if (hls) {
+        hls.destroy();
+      }
     }
   }
 
@@ -168,19 +175,20 @@ export default function BroadcastInfo() {
           </Header>
           <LiveBadgeWrap>
             <span>{broadcast.streamer}</span>
-            <LiveBadge>
-              <Badge enableShadow disableOutline color="error">
-                Live
-              </Badge>
-              <ViewerCount>
-                13,622
-              </ViewerCount>
-            </LiveBadge>
+            { broadcast.state === BroadcastState.READY && <>
+              <Badge enableShadow disableOutline>Ready</Badge>
+            </> }
+              { broadcast.state === BroadcastState.BROADCASTING && <LiveBadge>
+                  <Badge enableShadow disableOutline color="error">Live</Badge>
+                  <ViewerCount>13,622</ViewerCount>
+                </LiveBadge> }
           </LiveBadgeWrap>
         </HeaderWrap>
-        { !hls && <ButtonWrap>
-          <Avatar onClick={play} size="xl" color="gradient" icon={<PlayIcon />} />
-        </ButtonWrap> }
+        { broadcast.state === BroadcastState.BROADCASTING &&
+          <ButtonWrap>
+            <Avatar onClick={play} size="xl" color="gradient" icon={<PlayIcon />} />
+          </ButtonWrap>
+        }
         <VideoWrap>
           <video ref={videoRef} controls={false} autoPlay={true} muted={true} poster={broadcast.thumbnailImageUrl}>
             <source src={broadcast.streamUrl} type="application/x-mpegURL"/>
@@ -190,9 +198,7 @@ export default function BroadcastInfo() {
         <BottomWrap>
           <ChatInputWrap>
             <Input fullWidth placeholder="채팅을 입력해보세요!" value={message} onChange={onMessage} />
-            <Button auto color="gradient" onPress={sendMessage}>
-              전송
-            </Button>
+            <Button auto color="gradient" onPress={sendMessage}>전송</Button>
           </ChatInputWrap>
           <ChatWrap>
             {chatList.map((chat, index) => {

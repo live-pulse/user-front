@@ -39,6 +39,33 @@ const BottomWrap = styled.div`
 ;
 `;
 
+const BottomStreamWrap = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 100%;
+  height: 38vh;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column-reverse;
+  padding: 1rem;
+  overflow: hidden;
+
+  z-index: 5;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgb(0 0 0 / 0%) 100%);
+  -webkit-mask-image: linear-gradient(transparent, #fff 30px);
+
+  label {
+    color: #f1f3f5cc !important;
+  }
+
+  button {
+    margin-top: 0.5rem;
+  }
+;
+`;
+
 const HeaderWrap = styled.div`
   position: fixed;
   top: 0;
@@ -59,14 +86,26 @@ const Header = styled.div`
   h3 {
     margin: 0 !important;
   }
+  
+  button {
+    margin: 10px 0 10px 10px;
+  }
 `;
 
 const LiveBadgeWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`;
 
-  div > span > span {
+const LiveBadge = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+
+  span > span {
     position: absolute;
     margin-top: -14px;
     animation: blink 1s ease-in-out infinite alternate;
@@ -100,23 +139,17 @@ const LiveBadgeWrap = styled.div`
   }
 `;
 
-const LiveBadge = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-end;
-  align-items: center;
-`;
-
-const ViewerCount = styled.span`
+const ViewerCount = styled.div`
   background-color: rgb(249 249 249 / 30%);
   padding-left: 50px;
   border-radius: 15px;
-  width: 120px;
+  width: 105px;
   height: 28px;
   text-align: center;
-  font-weight: revert;
+  font-weight: 600;
   display: inherit;
+  font-size: smaller;
+  padding-top: 3px;
 `;
 
 const ChatWrap = styled.div`
@@ -145,7 +178,10 @@ const ChatInputWrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  calc(var(--nextui--inputHeightRatio) * var(--nextui-space-9));
+  
+  button {
+    margin: 0 !important;
+  }
 `;
 
 const VideoWrap = styled.div`
@@ -170,6 +206,7 @@ export {
   LiveBadge,
   ViewerCount,
   BottomWrap,
+  BottomStreamWrap,
   ChatWrap,
   Chat,
   ButtonWrap,
