@@ -108,7 +108,6 @@ export default function BroadcastInfo() {
 
       socket.on('sendMessage', (data: ChatList) => {
         setChatList(prevList => [...prevList, data]);
-        setMessage('');
       });
 
       socket.on('disconnect', () => {
@@ -134,12 +133,13 @@ export default function BroadcastInfo() {
       }
 
       const request: ChatList = {
-        streamKey: broadcast?.streamKey,
-        userId: user?.userId,
-        name: user?.name,
+        streamKey: broadcast.streamKey,
+        userId: user.userId,
+        name: user.name,
         message: message,
       }
       socket.emit('sendMessage', request);
+      setMessage('');
     }
   }
 
@@ -199,11 +199,11 @@ export default function BroadcastInfo() {
         </VideoWrap>
         <BottomWrap>
           <ChatInputWrap>
-            <Input fullWidth placeholder="채팅을 입력해보세요!" value={message} onChange={onMessage} />
+            <Input fullWidth placeholder="채팅을 입력해보세요!" initialValue={message} onChange={onMessage} />
             <Button auto color="gradient" onPress={sendMessage}>전송</Button>
           </ChatInputWrap>
           <ChatWrap>
-            {chatList.map((chat, index) => {
+            {chatList.map((chat: ChatList, index: number) => {
               const { name, message } = chat;
               return (
                 <Chat key={index}>

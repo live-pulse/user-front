@@ -155,9 +155,21 @@ const ViewerCount = styled.div`
 const ChatWrap = styled.div`
   display: flex;
   width: 100%;
+  height: auto;
   align-items: flex-start;
   flex-direction: column;
   margin-bottom: 0.5rem;
+
+  @keyframes slide-up {
+    from {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 `;
 
 const Chat = styled.span`
@@ -167,6 +179,9 @@ const Chat = styled.span`
   padding: 0.25rem 0.5rem 0.25rem 0.5rem;
   margin: 5px 0 2.5px 0;
   width: 100%;
+
+  opacity: 0;
+  animation: slide-up 0.5s ease-in-out forwards;
 
   h6 {
     margin: 0 !important;
@@ -178,7 +193,7 @@ const ChatInputWrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+
   button {
     margin: 0 !important;
   }
@@ -211,5 +226,5 @@ export {
   Chat,
   ButtonWrap,
   VideoWrap,
-  ChatInputWrap
+  ChatInputWrap,
 };
