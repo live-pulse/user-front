@@ -200,7 +200,7 @@ export default function BroadcastInfo() {
         </VideoWrap>
         <BottomWrap>
           <ChatInputWrap>
-            <Input fullWidth placeholder="채팅을 입력해보세요!" value={message} onChange={onMessage} />
+            <Input placeholder="채팅을 입력해보세요!" value={message} onChange={onMessage} />
             <Button auto color="gradient" onPress={sendMessage}>전송</Button>
           </ChatInputWrap>
           <ChatWrap>

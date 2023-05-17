@@ -13,7 +13,7 @@ export default function UsersCreate() {
 
   const [account, setAccount] = useState();
   const onAccount = (e) => setAccount(e.currentTarget.value);
-  const [validAccount, setValidAccount] = useState();
+  const [validAccount, setValidAccount] = useState(false);
   const [password, setPassword] = useState();
   const onPassword = (e) => setPassword(e.currentTarget.value);
   const [passwordCheck, setPasswordCheck] = useState();

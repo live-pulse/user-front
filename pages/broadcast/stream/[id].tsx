@@ -1,7 +1,7 @@
 'use client'
 
 import { WebRTCAdaptor } from '@antmedia/webrtc_adaptor';
-import { Badge, Button, Input, Loading } from '@nextui-org/react';
+import { Badge, Button, Loading } from '@nextui-org/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useRef } from 'react';
 import { broadcastFinishActions, broadcastStartActions, getRestActions, RequestUrl } from '@/api/myActions';
@@ -13,7 +13,7 @@ import {
   Header,
   HeaderWrap,
   LiveBadge,
-  LiveBadgeWrap, VideoWrap,
+  LiveBadgeWrap, VideoWrap, Input,
   ViewerCount,
   ChatInputWrap
 } from '@/components/broadcast/styleComponents';
@@ -209,7 +209,7 @@ export default function BroadcastStream() {
         </VideoWrap>
         <BottomStreamWrap>
           <ChatInputWrap>
-            <Input fullWidth placeholder="채팅을 입력해보세요!" initialValue={message} onChange={onMessage} />
+            <Input placeholder="채팅을 입력해보세요!" value={message} onChange={onMessage} />
             <Button auto color="gradient" onPress={sendMessage}>전송</Button>
           </ChatInputWrap>
           <ChatWrap>
