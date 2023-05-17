@@ -6,19 +6,20 @@ import { Mail, NameIcon, Password, PhoneIcon, PhotoIcon, UserIcon } from '@/comp
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Link from 'next/link';
-import { postAction, RequestUrl } from "@/api/myActions";
+import { postAction, RequestUrl } from '@/api/myActions';
 
 export default function UsersCreate() {
   const router = useRouter();
 
   const [account, setAccount] = useState();
   const onAccount = (e) => setAccount(e.currentTarget.value);
+  const [validAccount, setValidAccount] = useState();
   const [password, setPassword] = useState();
   const onPassword = (e) => setPassword(e.currentTarget.value);
   const [passwordCheck, setPasswordCheck] = useState();
   const onPasswordCheck = (e) => setPasswordCheck(e.currentTarget.value);
-  const [mail, setMail] = useState();
-  const onMail = (e) => setMail(e.currentTarget.value);
+  const [email, setEmail] = useState();
+  const onMail = (e) => setEmail(e.currentTarget.value);
   const [name, setName] = useState();
   const onName = (e) => setName(e.currentTarget.value);
   const [phone, setPhone] = useState();
@@ -27,23 +28,46 @@ export default function UsersCreate() {
   const onUserImageUrl = (e) => setUserImageUrl(e.currentTarget.value);
 
   const create = async () => {
+    if (!validAccount) {
+      alert('아이디 중복체크가 완료되지 않았습니다.');
+      return;
+    }
+
+    if (password !== passwordCheck) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+
+    }
+
+    if (!account || !password || !passwordCheck || !email || !name || !phone || !userImageUrl) {
+      alert('모든 항목을 입력해주세요');
+      return;
+    }
+
     const request = {
       account,
       password,
       passwordCheck,
-      mail,
+      email,
       name,
       phone,
       userImageUrl,
     }
+
     const result = await postAction(RequestUrl.USERS, request);
     if (result) {
-      console.log(result);
       alert('회원가입이 완료되었습니다');
       router.push('/users');
     }
   }
 
+  const checkAccount = async () => {
+    const result = await postAction(RequestUrl.USERS_VALID, { account });
+    if (result) {
+      alert('사용 가능한 아이디입니다.');
+      setValidAccount(true);
+    }
+  }
 
   return <>
     <Modal
@@ -67,7 +91,7 @@ export default function UsersCreate() {
             placeholder="Account"
             contentLeft={<UserIcon />}
           />
-          <Button auto color="gradient">
+          <Button auto color="gradient" onPress={checkAccount}>
             중복체크
           </Button>
         </Row>
@@ -77,7 +101,6 @@ export default function UsersCreate() {
           bordered
           fullWidth
           color="secondary"
-          size="lg"
           placeholder="Password"
           type="password"
           contentLeft={<Password />}
@@ -93,7 +116,7 @@ export default function UsersCreate() {
           contentLeft={<Password />}
         />
         <Input
-          value={mail}
+          value={email}
           onChange={onMail}
           bordered
           fullWidth

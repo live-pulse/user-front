@@ -3,6 +3,7 @@ import { getCookie } from 'cookies-next';
 export enum RequestUrl {
   BROADCASTS = '/broadcasts',
   USERS = '/users',
+  USERS_VALID = '/users/validation',
   LOGIN = '/users/sign-in',
 }
 
