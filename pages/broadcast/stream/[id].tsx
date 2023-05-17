@@ -56,6 +56,7 @@ export default function BroadcastStream() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [broadcast, setBroadcast] = useState<Broadcast>();
   const [user, setUser] = useState<User>();
+  const [viewerCount, setViewerCount] = useState<number>(0);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [chatList, setChatList] = useState<ChatList[]>([]);
   const [message, setMessage] = useState<string>('');
@@ -128,6 +129,7 @@ export default function BroadcastStream() {
   useEffect(() => {
     if (socket) {
       getLastChat();
+      getViewerCount();
 
       socket.on('sendMessage', (data: ChatList) => {
         setChatList(prevList => [...prevList, data]);
@@ -136,6 +138,14 @@ export default function BroadcastStream() {
 
       socket.on('disconnect', () => {
         setSocket(null);
+      });
+
+      socket.on('connectViewer', () => {
+        setViewerCount(prevCount => prevCount + 1);
+      });
+
+      socket.on('disconnectViewer', () => {
+        setViewerCount(prevCount => prevCount - 1);
       });
     }
   }, [socket]);
@@ -148,6 +158,15 @@ export default function BroadcastStream() {
       });
     }
   };
+
+  const getViewerCount = () => {
+    if (socket) {
+      socket.emit('getViewerCount');
+      socket.on('getViewerCount', (data: number) => {
+        setViewerCount(data);
+      });
+    }
+  }
 
   const sendMessage = () => {
     if (socket && user && broadcast) {
@@ -200,7 +219,7 @@ export default function BroadcastStream() {
             </> }
             { broadcastStatus === BroadcastState.BROADCASTING && <LiveBadge>
               <Badge enableShadow disableOutline color="error">Live</Badge>
-              <ViewerCount>13,622</ViewerCount>
+              <ViewerCount>{viewerCount}</ViewerCount>
             </LiveBadge> }
           </LiveBadgeWrap>
         </HeaderWrap>

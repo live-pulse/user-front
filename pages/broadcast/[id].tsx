@@ -107,7 +107,7 @@ export default function BroadcastInfo() {
   useEffect(() => {
     if (socket) {
       getLastChat();
-      getUserCount();
+      getViewerCount();
 
       socket.on('sendMessage', (data: ChatList) => {
         setChatList(prevList => [...prevList, data]);
@@ -136,7 +136,7 @@ export default function BroadcastInfo() {
     }
   };
 
-  const getUserCount = () => {
+  const getViewerCount = () => {
     if (socket) {
       socket.emit('getViewerCount');
       socket.on('getViewerCount', (data: number) => {
