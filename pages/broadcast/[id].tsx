@@ -60,6 +60,7 @@ export default function BroadcastInfo() {
   const [hls, setHls] = useState<Hls | null>(null);
   const [broadcast, setBroadcast] = useState<Broadcast | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [viewerCount, setViewerCount] = useState<number>(0);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [chatList, setChatList] = useState<ChatList[]>([]);
   const [message, setMessage] = useState<string>('');
@@ -106,6 +107,7 @@ export default function BroadcastInfo() {
   useEffect(() => {
     if (socket) {
       getLastChat();
+      getUserCount();
 
       socket.on('sendMessage', (data: ChatList) => {
         setChatList(prevList => [...prevList, data]);
@@ -113,6 +115,14 @@ export default function BroadcastInfo() {
 
       socket.on('disconnect', () => {
         setSocket(null);
+      });
+
+      socket.on('connectViewer', () => {
+        setViewerCount(prevCount => prevCount + 1);
+      });
+
+      socket.on('disconnectViewer', () => {
+        setViewerCount(prevCount => prevCount - 1);
       });
     }
   }, [socket]);
@@ -125,6 +135,15 @@ export default function BroadcastInfo() {
       });
     }
   };
+
+  const getUserCount = () => {
+    if (socket) {
+      socket.emit('getViewerCount');
+      socket.on('getViewerCount', (data: number) => {
+        setViewerCount(data);
+      });
+    }
+  }
 
   const sendMessage = () => {
     if (socket && user && broadcast) {
@@ -182,8 +201,8 @@ export default function BroadcastInfo() {
               <Badge enableShadow disableOutline>Ready</Badge>
             </> }
               { broadcast.state === BroadcastState.BROADCASTING && <LiveBadge>
-                  <Badge enableShadow disableOutline color="error">Live</Badge>
-                  <ViewerCount>13,622</ViewerCount>
+                  <Badge enableShadow disableOutline color="error">LIVE</Badge>
+                  <ViewerCount>{viewerCount}</ViewerCount>
                 </LiveBadge> }
           </LiveBadgeWrap>
         </HeaderWrap>
