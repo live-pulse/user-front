@@ -209,7 +209,7 @@ export default function BroadcastStream() {
         </VideoWrap>
         <BottomStreamWrap>
           <ChatInputWrap>
-            <Input fullWidth placeholder="채팅을 입력해보세요!" value={message} onChange={onMessage} />
+            <Input fullWidth placeholder="채팅을 입력해보세요!" initialValue={message} onChange={onMessage} />
             <Button auto color="gradient" onPress={sendMessage}>전송</Button>
           </ChatInputWrap>
           <ChatWrap>

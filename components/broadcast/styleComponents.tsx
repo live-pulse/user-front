@@ -213,6 +213,26 @@ const VideoWrap = styled.div`
   }
 `;
 
+const Input = styled.input`
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0.375rem 0.75rem;
+  margin: 0 3px 0 0;
+  font-size: revert;
+  font-weight: 400;
+  font-family: inherit;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 12px;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+`;
+
 export {
   BroadcastWrap,
   HeaderWrap,
@@ -227,4 +247,5 @@ export {
   ButtonWrap,
   VideoWrap,
   ChatInputWrap,
+  Input,
 };

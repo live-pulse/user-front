@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Hls from 'hls.js';
 import Link from 'next/link';
 import { outIcon, PlayIcon } from '@/components/svgs/Svgs';
-import { Avatar, Badge, Input, Loading, Button } from '@nextui-org/react';
+import { Avatar, Badge, Loading, Button } from '@nextui-org/react';
 import {
   BottomWrap,
   BroadcastWrap,
@@ -16,7 +16,7 @@ import {
   LiveBadge,
   LiveBadgeWrap,
   ViewerCount,
-  ButtonWrap, VideoWrap, Chat,
+  ButtonWrap, VideoWrap, Chat, Input,
 } from '@/components/broadcast/styleComponents';
 import { getRestActions, RequestUrl } from '@/api/myActions';
 import io, { Socket } from 'socket.io-client';
@@ -75,6 +75,7 @@ export default function BroadcastInfo() {
     if (!auth) {
       alert('로그인이 필요합니다.');
       router.push('/users');
+      return;
     }
 
     async function fetchBroadcastData() {
@@ -199,7 +200,7 @@ export default function BroadcastInfo() {
         </VideoWrap>
         <BottomWrap>
           <ChatInputWrap>
-            <Input fullWidth placeholder="채팅을 입력해보세요!" initialValue={message} onChange={onMessage} />
+            <Input fullWidth placeholder="채팅을 입력해보세요!" value={message} onChange={onMessage} />
             <Button auto color="gradient" onPress={sendMessage}>전송</Button>
           </ChatInputWrap>
           <ChatWrap>
