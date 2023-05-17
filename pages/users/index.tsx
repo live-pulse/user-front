@@ -3,7 +3,7 @@
 import styled from 'styled-components';
 import { Button, Input, Modal, Row, Text } from '@nextui-org/react';
 import { postAction, RequestUrl } from '@/api/myActions';
-import { Mail, Password } from '@/components/svgs/Svgs';
+import { UserIcon, Password } from '@/components/svgs/Svgs';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -50,7 +50,7 @@ export default function Users() {
           bordered
           color="secondary"
           placeholder="Account"
-          contentLeft={<Mail />}
+          contentLeft={<UserIcon />}
         />
         <Input
           value={password}
