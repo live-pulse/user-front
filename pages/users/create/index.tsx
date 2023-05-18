@@ -126,7 +126,7 @@ export default function UsersCreate() {
           contentLeft={<Mail />}
         />
         <Input
-          value={name}
+          initialValue={name}
           onChange={onName}
           bordered
           fullWidth

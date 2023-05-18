@@ -72,6 +72,7 @@ export default function BroadcastStream() {
     async function fetchBroadcastData() {
       const fetchData = await getRestActions(RequestUrl.BROADCASTS, id);
       setBroadcast(fetchData.data);
+      setBroadcastStatus(fetchData.data.state);
       return fetchData.data;
     }
 

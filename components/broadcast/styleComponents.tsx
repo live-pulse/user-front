@@ -150,6 +150,7 @@ const ViewerCount = styled.div`
   display: inherit;
   font-size: smaller;
   padding-top: 3px;
+  justify-content: center;
 `;
 
 const ChatWrap = styled.div`

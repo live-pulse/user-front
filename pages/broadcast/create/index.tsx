@@ -56,9 +56,9 @@ export default function CreateBroadcast() {
     <BackGroundImage />
     <InputWrap>
       <h2>방송 생성</h2>
-      <Input value={title} onChange={onTitle} label="방송 제목" placeholder="방송 제목" width="100%" />
-      <Textarea value={description} onChange={onDescription} label="방송 소개" placeholder="방송 소개" width="100%" />
-      <Input value={thumbnailImageUrl} onChange={onThumbnailImageUrl} label="썸네일 이미지" placeholder="썸네일 이미지 업로드" width="100%" />
+      <Input initialValue={title} onChange={onTitle} label="방송 제목" placeholder="방송 제목" width="100%" />
+      <Textarea initialValue={description} onChange={onDescription} label="방송 소개" placeholder="방송 소개" width="100%" />
+      <Input initialValue={thumbnailImageUrl} onChange={onThumbnailImageUrl} label="썸네일 이미지" placeholder="썸네일 이미지 업로드" width="100%" />
       <div>
         <span>태그 선택</span><br />
         <Checkbox.Group value={tags} onChange={setTags}>
