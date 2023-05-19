@@ -18,6 +18,7 @@ import {
   ChatInputWrap
 } from '@/components/broadcast/styleComponents';
 import io, { Socket } from "socket.io-client";
+import { getCookie } from "cookies-next";
 
 enum BroadcastState {
   READY = 'READY',
@@ -69,6 +70,13 @@ export default function BroadcastStream() {
     if (!router.isReady) return;
     const id = router.query.id;
 
+    const auth = getCookie('auth');
+    if (!auth) {
+      alert('로그인이 필요합니다.');
+      router.push('/users');
+      return;
+    }
+
     async function fetchBroadcastData() {
       const fetchData = await getRestActions(RequestUrl.BROADCASTS, id);
       setBroadcast(fetchData.data);
@@ -85,6 +93,11 @@ export default function BroadcastStream() {
     fetchUserData();
     fetchBroadcastData()
       .then((data) => {
+        if (data.state === BroadcastState.FINISHED) {
+          alert('종료된 방송입니다.');
+          router.push('/home');
+        }
+
         const webRTCAdaptor = new WebRTCAdaptor({
           websocket_url: process.env.NEXT_PUBLIC_SOCKET_URL,
           mediaConstraints: {
@@ -187,7 +200,7 @@ export default function BroadcastStream() {
   }
 
   const start = async () => {
-    if (streamVideo && broadcast) {
+    if (confirm('방송을 시작하시겠습니까?') && streamVideo && broadcast) {
       streamVideo.publish(broadcast.streamKey);
       setBroadcastStatus(BroadcastState.BROADCASTING);
       await broadcastStartActions(broadcast.streamKey);
@@ -195,10 +208,11 @@ export default function BroadcastStream() {
   };
 
   const finish = async () => {
-    if (broadcast) {
+    if (confirm('방송을 종료하시겠습니까?') && broadcast) {
       streamVideo.stop(broadcast.streamKey);
       setBroadcastStatus(BroadcastState.FINISHED);
       await broadcastFinishActions(broadcast.streamKey);
+      router.push('/broadcast/finish');
     }
   }
 

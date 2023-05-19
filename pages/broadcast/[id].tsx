@@ -113,6 +113,10 @@ export default function BroadcastInfo() {
         setChatList(prevList => [...prevList, data]);
       });
 
+      socket.on('broadcastFinish', () => {
+        router.push('/broadcast/finish');
+      })
+
       socket.on('disconnect', () => {
         setSocket(null);
       });
