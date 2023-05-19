@@ -1,7 +1,6 @@
-import { Button, Input, Modal, Row, Text } from "@nextui-org/react";
-import { Mail, NameIcon, Password, PhoneIcon, PhotoIcon, UserIcon } from "@/components/svgs/Svgs";
-import Link from "next/link";
-import styled from "styled-components";
+import { Button, Modal, Row, Text } from '@nextui-org/react';
+import Link from 'next/link';
+import styled from 'styled-components';
 
 export default function BroadcastFinish() {
   return <>
