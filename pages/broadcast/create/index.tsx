@@ -37,6 +37,12 @@ export default function CreateBroadcast() {
     const date = new Date;
     date.setHours(Number(startDate.split(':')[0]));
     date.setMinutes(Number(startDate.split(':')[1]));
+
+    if (!title || !description || !thumbnailImageUrl || !startDate || !tags) {
+      alert('모든 항목을 입력해주세요.');
+      return;
+    }
+
     const request = {
       title,
       description,

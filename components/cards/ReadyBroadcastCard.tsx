@@ -1,53 +1,64 @@
-import styled from "styled-components";
-import { notificationIcon } from '@/components/svgs/Svgs';
-import { Avatar, Badge, Grid } from "@nextui-org/react";
+'use clinet'
 
-const data = [
-  {
-    id: 1,
-    src: 'https://nextui.org/images/card-example-6.jpeg',
-    avatarImg: 'https://avatars.githubusercontent.com/u/57277976?v=4',
-    title: 'Get Coding With Me',
-    subscribtion: '같이 코딩할 사람',
-    tags: ['code', 'coding', 'programming', 'java'],
-    startDate: new Date('2021-10-10 10:30:00'),
-    streamer: 'Hannah',
-  },
-  {
-    id: 2,
-    src: 'https://nextui.org/images/card-example-2.jpeg',
-    avatarImg: 'https://avatars.githubusercontent.com/u/44762533?v=4',
-    title: '마스터 찍을 때 까지 노방종',
-    subscribtion: '마스터 찍기 프로젝트 3일차',
-    tags: ['lol', 'master', 'league of legends', 'league'],
-    startDate: new Date('2021-10-10 10:30:00'),
-    streamer: 'Hwasowl',
-  },
-  {
-    id: 3,
-    src: 'https://nextui.org/images/card-example-3.jpeg',
-    avatarImg: 'https://i.pravatar.cc/150?u=a042581f4e29026024d',
-    title: 'The Best of 2022',
-    subscribtion: '2022년 가장 인기있었던 언어 톺아보기',
-    tags: ['python', 'java', 'javascript', 'c++'],
-    startDate: new Date('2021-10-10 10:30:00'),
-    streamer: 'Joe',
-  },
-  {
-    id: 4,
-    src: 'https://nextui.org/images/card-example-4.jpeg',
-    avatarImg: 'https://avatars.githubusercontent.com/u/112460618?s=200&v=4',
-    title: '타임 세일 중',
-    subscribtion: '봄맞이 신상 의류 세일',
-    tags: ['스웨터', '반팔', '반바지', '바지'],
-    startDate: new Date('2021-10-10 10:30:00'),
-    streamer: 'John',
-  }
-];
+import styled from 'styled-components';
+import { notificationIcon } from '@/components/svgs/Svgs';
+import { Avatar, Badge, Grid } from '@nextui-org/react';
+import { useEffect, useState } from 'react';
+import { getRestActions, RequestUrl } from '@/api/myActions';
+
+interface BroadcastInfo {
+  id: number;
+  title: string;
+  description: string;
+  streamKey: string;
+  thumbnailImageUrl: string;
+  startDate: Date;
+  userId: number;
+  streamer: string;
+  profileUrl: string;
+  state: 'READY' | 'BROADCASTING' | 'FINISHED';
+  streamUrl: string;
+  tags: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export default function ReadyBroadcastCard() {
+  const [readyBroadcasts, setReadyBroadcasts] = useState<BroadcastInfo[]>([]);
+
+  useEffect(() => {
+    async function fetchLiveBroadcastData() {
+      const fetch = await getRestActions(RequestUrl.BROADCASTS, 'ready');
+      const setFetch: BroadcastInfo[] = fetch.data.map((item: BroadcastInfo) => {
+        return {
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          streamKey: item.streamKey,
+          thumbnailImageUrl: item.thumbnailImageUrl,
+          startDate: new Date(item.startDate),
+          userId: item.userId,
+          streamer: item.streamer,
+          profileUrl: item.profileUrl,
+          state: item.state,
+          streamUrl: item.streamUrl,
+          tags: item.tags,
+          createdAt: new Date(item.createdAt),
+          updatedAt: new Date(item.updatedAt),
+        }
+      });
+      console.log(setFetch)
+      setReadyBroadcasts(setFetch);
+      return fetch.data;
+    }
+
+    if (readyBroadcasts.length < 1) {
+      fetchLiveBroadcastData();
+    }
+  }, readyBroadcasts.length < 1);
+
   return <>
-    {data.map((item) => {
+    { readyBroadcasts.map((item: BroadcastInfo) => {
       return <CardWrap key={item.id}>
         <ImageWrap>
           <ImageShadowBox>
@@ -56,14 +67,14 @@ export default function ReadyBroadcastCard() {
               <h6>{item.startDate.getMonth()}월 {item.startDate.getDate()}일</h6>
               <h2>{item.startDate.getHours()}:{item.startDate.getUTCMinutes()}</h2>
             </ImageDate>
-            <Image src={item.src} alt={item.title} key={item.id} />
+            <Image src={item.thumbnailImageUrl} alt={item.title} key={item.id} />
           </ImageShadowBox>
         </ImageWrap>
         <TextWrap>
           <h5>{item.title}</h5>
-          <h6>{item.subscribtion}</h6>
+          <h6>{item.description}</h6>
           <Grid.Container>
-            {item.tags.map((tag) => {
+            {item.tags.map((tag: string) => {
               return <Grid key={tag}>
                 <Badge variant="flat" size="sm">#{tag}</Badge>
               </Grid>;
@@ -77,7 +88,7 @@ export default function ReadyBroadcastCard() {
           </Grid>
           <Streamer>
             <Avatar
-              src={item.avatarImg}
+              src={item.profileUrl}
               size="xs"
             />
             <AvatarName>{item.streamer}</AvatarName>

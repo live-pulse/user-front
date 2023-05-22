@@ -1,3 +1,5 @@
+'use client'
+
 import styled from 'styled-components';
 import BroadcastingCard from '@/components/cards/BroadcastingCard';
 import ReadyBroadcastCard from '@/components/cards/ReadyBroadcastCard';

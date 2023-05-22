@@ -1,53 +1,38 @@
+'use client'
+
 import styled from 'styled-components';
 import Link from 'next/link';
 import { Avatar, Badge, Grid } from '@nextui-org/react';
+import { useEffect, useState } from 'react';
+import { getRestActions, RequestUrl } from '@/api/myActions';
 
-const data = [
-  {
-    id: 1,
-    src: 'https://nextui.org/images/card-example-6.jpeg',
-    avatarImg: 'https://avatars.githubusercontent.com/u/57277976?v=4',
-    title: 'Get Coding With Me',
-    streamKey: 'coding',
-    subscribtion: '같이 코딩할 사람',
-    tags: ['code', 'coding', 'programming', 'java'],
-    streamer: 'Hannah',
-  },
-  {
-    id: 2,
-    src: 'https://nextui.org/images/card-example-2.jpeg',
-    avatarImg: 'https://avatars.githubusercontent.com/u/44762533?v=4',
-    title: '마스터 찍을 때 까지 노방종',
-    streamKey: 'master',
-    subscribtion: '마스터 찍기 프로젝트 3일차',
-    tags: ['lol', 'master', 'league of legends', 'league'],
-    streamer: 'Hwasowl',
-  },
-  {
-    id: 3,
-    src: 'https://nextui.org/images/card-example-3.jpeg',
-    avatarImg: 'https://i.pravatar.cc/150?u=a042581f4e29026024d',
-    title: 'The Best of 2022',
-    streamKey: 'language',
-    subscribtion: '2022년 가장 인기있었던 언어 톺아보기',
-    tags: ['python', 'java', 'javascript', 'c++'],
-    streamer: 'Joe',
-  },
-  {
-    id: 4,
-    src: 'https://nextui.org/images/card-example-4.jpeg',
-    avatarImg: 'https://avatars.githubusercontent.com/u/112460618?s=200&v=4',
-    title: '타임 세일 중',
-    streamKey: 'sale',
-    subscribtion: '봄맞이 신상 의류 세일',
-    tags: ['스웨터', '반팔', '반바지', '바지'],
-    streamer: 'John',
-  }
-];
+interface BroadcastInfo {
+  id: number;
+  title: string;
+  streamKey: string;
+  thumbnailImageUrl: string;
+  streamer: string;
+  profileUrl: string;
+}
 
 export default function BroadcastingCard() {
+  const [liveBroadcasts, setLiveBroadcasts] = useState<BroadcastInfo[]>([]);
+
+  useEffect(() => {
+    async function fetchLiveBroadcastData() {
+      const fetch = await getRestActions(RequestUrl.BROADCASTS, 'live');
+      setLiveBroadcasts(fetch?.data);
+      return fetch.data;
+    }
+
+    if (liveBroadcasts.length < 1) {
+      fetchLiveBroadcastData();
+    }
+  }, liveBroadcasts.length < 1);
+
+
   return <CardListWrap>
-    {data.map((item) => {
+    {liveBroadcasts.map((item: BroadcastInfo) => {
       return <Link href={`/broadcast/${item.streamKey}`} key={item.id}>
         <CardWrap>
           <LiveBadge>
@@ -57,11 +42,11 @@ export default function BroadcastingCard() {
               </Badge>
             </Grid>
           </LiveBadge>
-          <Image src={item.src} alt={item.title}/>
+          <Image src={item.thumbnailImageUrl} alt={item.title}/>
           <Title>{item.title}</Title>
           <Streamer>
             <Avatar
-              src={item.avatarImg}
+              src={item.profileUrl}
               size="xs"
             />
             <AvatarName>{item.streamer}</AvatarName>
