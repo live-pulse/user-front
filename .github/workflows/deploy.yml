@@ -1,4 +1,4 @@
-name: Deploy NestJS Live Pulse API Service App
+name: Deploy NestJS Live Pulse Front Service App
 
 on:
   push:
