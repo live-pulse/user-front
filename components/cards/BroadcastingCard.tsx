@@ -28,7 +28,7 @@ export default function BroadcastingCard() {
     if (liveBroadcasts.length < 1) {
       fetchLiveBroadcastData();
     }
-  }, liveBroadcasts.length < 1);
+  }, [liveBroadcasts]);
 
 
   return <CardListWrap>

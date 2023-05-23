@@ -55,7 +55,7 @@ export default function ReadyBroadcastCard() {
     if (readyBroadcasts.length < 1) {
       fetchLiveBroadcastData();
     }
-  }, readyBroadcasts.length < 1);
+  }, [readyBroadcasts]);
 
   return <>
     { readyBroadcasts.map((item: BroadcastInfo) => {

@@ -27,7 +27,7 @@ export default function Users() {
       console.log(result);
       alert('로그인이 완료되었습니다.');
       setCookie('auth', result.data.token, { maxAge: 60 * 60 });
-      await router.push('/home');
+      await router.back();
     }
   }
 

@@ -212,7 +212,7 @@ export default function BroadcastStream() {
       streamVideo.stop(broadcast.streamKey);
       setBroadcastStatus(BroadcastState.FINISHED);
       await broadcastFinishActions(broadcast.streamKey);
-      router.push('/broadcast/finish');
+      await router.push('/broadcast/finish');
     }
   }
 

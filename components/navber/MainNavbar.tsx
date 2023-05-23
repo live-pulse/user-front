@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { bellIcon, realCameraIcon, userIcon, plusIcon } from '@/components/svgs/Svgs';
+import { realCameraIcon, userIcon, plusIcon } from '@/components/svgs/Svgs';
 import Menubar from '@/components/navber/Menubar';
 import Link from 'next/link';
 
@@ -14,7 +14,6 @@ export default function MainNavbar() {
         <Link href="/broadcast/create">
           { plusIcon({width: 30, height: 30}) }
         </Link>
-        { bellIcon({width: 30, height: 30}) }
         <Link href="/users">
           { userIcon({width: 30, height: 30}) }
         </Link>

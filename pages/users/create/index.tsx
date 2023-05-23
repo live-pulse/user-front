@@ -57,7 +57,7 @@ export default function UsersCreate() {
     const result = await postAction(RequestUrl.USERS, request);
     if (result) {
       alert('회원가입이 완료되었습니다');
-      router.push('/users');
+      router.back();
     }
   }
 
