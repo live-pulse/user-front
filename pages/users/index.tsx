@@ -24,7 +24,6 @@ export default function Users() {
     }
     const result = await postAction(RequestUrl.LOGIN, request);
     if (result) {
-      console.log(result);
       alert('로그인이 완료되었습니다.');
       setCookie('auth', result.data.token, { maxAge: 60 * 60 });
       await router.back();

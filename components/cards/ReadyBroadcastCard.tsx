@@ -47,7 +47,6 @@ export default function ReadyBroadcastCard() {
           updatedAt: new Date(item.updatedAt),
         }
       });
-      console.log(setFetch)
       setReadyBroadcasts(setFetch);
       return fetch.data;
     }

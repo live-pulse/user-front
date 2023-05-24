@@ -52,7 +52,6 @@ export default function CreateBroadcast() {
     }
     const result = await postAction(RequestUrl.BROADCASTS, request);
     if (result) {
-      console.log(result);
       alert('방송이 생성되었습니다');
       router.push(`/broadcast/stream/${result.data.streamKey}`);
     }
