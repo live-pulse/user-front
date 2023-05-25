@@ -8,12 +8,9 @@ type NavData = {
   index: number;
   name: string;
   href: string;
-  isOpen: boolean;
 }
 
-type NavDataArr = NavData[];
-
-const navData: NavDataArr = [
+const navData: NavData[] = [
   {
     index: 0,
     name: "Home",

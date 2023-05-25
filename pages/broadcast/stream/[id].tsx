@@ -54,6 +54,10 @@ interface ChatList {
   message: string;
 }
 
+interface JwtToken extends JwtPayload {
+  id: number
+}
+
 export default function BroadcastStream() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -95,7 +99,7 @@ export default function BroadcastStream() {
 
     fetchBroadcastData()
       .then((data) => {
-        const claims: JwtPayload = jwt_decode(auth);
+        const claims: JwtToken = jwt_decode(String(auth));
 
         if (data.userId !== claims.id) {
           alert('접근 권한이 없는 페이지 입니다.');
