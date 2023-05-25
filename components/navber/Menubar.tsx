@@ -8,6 +8,7 @@ type NavData = {
   index: number;
   name: string;
   href: string;
+  isOpen: boolean;
 }
 
 type NavDataArr = NavData[];

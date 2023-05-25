@@ -5,6 +5,7 @@ import { notificationIcon } from '@/components/svgs/Svgs';
 import { Avatar, Badge, Grid } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 import { getRestActions, RequestUrl } from '@/api/myActions';
+import Link from 'next/link';
 
 interface BroadcastInfo {
   id: number;
@@ -82,7 +83,12 @@ export default function ReadyBroadcastCard() {
           <Grid style={{ marginTop: '10px' }}>
             <Badge color="error" size="xs" variant="bordered">
               <Avatar icon={ notificationIcon({width: 15, height: 15}) } size="xs" />
-              <span style={{ marginRight: '2px' }}>알람받기</span>
+              <Link href='' onClick={() => {
+                alert('미지원 기능입니다.');
+                return;
+              }}>
+                <span style={{ marginRight: '2px' }}>알람받기</span>
+              </Link>
             </Badge>
           </Grid>
           <Streamer>
