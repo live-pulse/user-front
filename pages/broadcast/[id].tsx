@@ -200,6 +200,12 @@ export default function BroadcastInfo() {
     }
   }
 
+  const onCheckEnter = (e) => {
+    if(e.key === 'Enter') {
+      sendMessage();
+    }
+  }
+
   const urlTest = async (url: string) => {
     try {
       const response = await fetch(url);
@@ -259,7 +265,7 @@ export default function BroadcastInfo() {
         </VideoWrap>
         <BottomWrap>
           <ChatInputWrap>
-            <Input placeholder="채팅을 입력해보세요!" value={message} onChange={onMessage} />
+            <Input placeholder="채팅을 입력해보세요!" value={message} onChange={onMessage} onKeyDown={onCheckEnter} />
             <Button auto color="gradient" onPress={sendMessage}>전송</Button>
           </ChatInputWrap>
           <ChatWrap>

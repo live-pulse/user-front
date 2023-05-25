@@ -68,16 +68,18 @@ export default function ReadyBroadcastCard() {
   return <>
     { readyBroadcasts.map((item: BroadcastInfo) => {
       return <CardWrap key={item.id}>
-        <ImageWrap>
-          <ImageShadowBox>
-            <ImageDate>
-              <EmptyBox />
-              <h6>{dateFormat(item.startDate)}</h6>
-              <h2>{timeFormat(item.startDate)}</h2>
-            </ImageDate>
-            <Image src={item.thumbnailImageUrl} alt={item.title} key={item.id} />
-          </ImageShadowBox>
-        </ImageWrap>
+        <Link href={`/broadcast/${item.streamKey}`}>
+          <ImageWrap>
+            <ImageShadowBox>
+              <ImageDate>
+                <EmptyBox />
+                <h6>{dateFormat(item.startDate)}</h6>
+                <h2>{timeFormat(item.startDate)}</h2>
+              </ImageDate>
+              <Image src={item.thumbnailImageUrl} alt={item.title} key={item.id} />
+            </ImageShadowBox>
+          </ImageWrap>
+        </Link>
         <TextWrap>
           <h5>{item.title}</h5>
           <h6>{item.description}</h6>

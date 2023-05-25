@@ -238,6 +238,12 @@ export default function BroadcastStream() {
     }
   }
 
+  const onCheckEnter = (e) => {
+    if(e.key === 'Enter') {
+      sendMessage();
+    }
+  }
+
   return (
     broadcast ?
       <BroadcastWrap>
@@ -265,7 +271,7 @@ export default function BroadcastStream() {
         </VideoWrap>
         <BottomStreamWrap>
           <ChatInputWrap>
-            <Input placeholder="채팅을 입력해보세요!" value={message} onChange={onMessage} />
+            <Input placeholder="채팅을 입력해보세요!" value={message} onChange={onMessage} onKeyDown={onCheckEnter} />
             <Button auto color="gradient" onPress={sendMessage}>전송</Button>
           </ChatInputWrap>
           <ChatWrap>
