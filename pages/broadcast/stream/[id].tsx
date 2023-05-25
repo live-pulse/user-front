@@ -128,6 +128,10 @@ export default function BroadcastStream() {
         });
         setStreamVideo(webRTCAdaptor);
         setBroadcastStatus(data.state);
+
+        if(data.state === BroadcastState.BROADCASTING) {
+          webRTCAdaptor.publish(data.streamKey);
+        }
       });
     fetchUserData();
 
