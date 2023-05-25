@@ -12,6 +12,23 @@ const ButtonWrap = styled.div`
   z-index: 10;
 `;
 
+const ReadyWrap = styled.div`
+  position: absolute;
+  display: flex;
+  z-index: 3;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: #fff;
+    margin: 0 !important;
+  }
+`;
+
 const BottomWrap = styled.div`
   position: absolute;
   bottom: 0;
@@ -247,6 +264,7 @@ export {
   ChatWrap,
   Chat,
   ButtonWrap,
+  ReadyWrap,
   VideoWrap,
   ChatInputWrap,
   Input,

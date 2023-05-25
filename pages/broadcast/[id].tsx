@@ -5,9 +5,10 @@ import { useRouter } from 'next/router';
 import Hls from 'hls.js';
 import Link from 'next/link';
 import { outIcon, PlayIcon } from '@/components/svgs/Svgs';
-import { Avatar, Badge, Loading, Button } from '@nextui-org/react';
+import { Avatar, Badge, Loading, Button, Text } from '@nextui-org/react';
 import {
   BottomWrap,
+  ReadyWrap,
   BroadcastWrap,
   ChatInputWrap,
   ChatWrap,
@@ -40,6 +41,7 @@ interface Broadcast {
   streamKey: string;
   thumbnailImageUrl: string;
   state: BroadcastState;
+  startDate: Date;
 }
 
 interface User {
@@ -57,6 +59,7 @@ interface ChatList {
 export default function BroadcastInfo() {
   const router = useRouter();
 
+  const [plaing, setPlaying] = useState<boolean>(true);
   const [hls, setHls] = useState<Hls | null>(null);
   const [broadcast, setBroadcast] = useState<Broadcast | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -171,33 +174,55 @@ export default function BroadcastInfo() {
     }
   }
 
-  const play = () => {
+  const play = async () => {
     if (broadcast) {
-      if (broadcast.state !== BroadcastState.BROADCASTING) {
-        alert('방송이 시작되지 않았습니다.');
-        return;
-      }
+      try {
+        const video: HTMLMediaElement = videoRef.current;
 
-      const video: HTMLMediaElement = videoRef.current;
+        if (video && Hls.isSupported()) {
+          const hlsInstance = new Hls();
+          hlsInstance.loadSource(broadcast.streamUrl);
+          hlsInstance.attachMedia(video);
+          setHls(hlsInstance);
+        } else if (video?.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = broadcast.streamUrl;
+        }
 
-      if (video && Hls.isSupported()) {
-        const hlsInstance = new Hls();
-        hlsInstance.loadSource(broadcast.streamUrl);
-        hlsInstance.attachMedia(video);
-        setHls(hlsInstance);
-      } else if (video?.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = broadcast.streamUrl;
-      }
+        await urlTest(broadcast.streamUrl);
 
-      if (hls) {
-        hls.destroy();
+        if (hls) {
+          hls.destroy();
+        }
+      } catch (e) {
+        console.error(e);
+        setPlaying(false);
       }
     }
   }
 
+  const urlTest = async (url: string) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Request faild!');
+      return await response.json();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  const dateFormat = (date: Date) => {
+    const dateOb = new Date(date);
+    return `${dateOb.getFullYear()}-${dateOb.getMonth() + 1}-${dateOb.getDate()}`;
+  }
+
+  const timeFormat = (date: Date) => {
+    const dateOb = new Date(date);
+    return `${dateOb.getHours()}:${dateOb.getMinutes()}`;
+  }
+
   return (
-    broadcast ?
-      <BroadcastWrap>
+    <BroadcastWrap>
+      { broadcast ? <>
         <HeaderWrap>
           <Header>
             <h3>{broadcast.title}</h3>
@@ -214,10 +239,17 @@ export default function BroadcastInfo() {
                 </LiveBadge> }
           </LiveBadgeWrap>
         </HeaderWrap>
-        { broadcast.state === BroadcastState.BROADCASTING &&
+        { (plaing && broadcast.state === BroadcastState.BROADCASTING) &&
           <ButtonWrap>
             <Avatar onClick={play} size="xl" color="gradient" icon={<PlayIcon />} />
           </ButtonWrap>
+        }
+        { broadcast.state === BroadcastState.READY &&
+          <ReadyWrap>
+            <Text h4>방송 시작 전입니다.</Text>
+            <Text h5>{dateFormat(broadcast.startDate)}</Text>
+            <Text h1>{timeFormat(broadcast.startDate)}</Text>
+          </ReadyWrap>
         }
         <VideoWrap>
           <video ref={videoRef} controls={false} autoPlay={true} muted={true} poster={broadcast.thumbnailImageUrl}>
@@ -241,7 +273,8 @@ export default function BroadcastInfo() {
             })}
           </ChatWrap>
         </BottomWrap>
+      </>
+      : <Loading type="points" color="currentColor" size="lg"/> }
       </BroadcastWrap>
-      : <Loading type="points" color="currentColor" size="lg"/>
-  )
+    );
 }
