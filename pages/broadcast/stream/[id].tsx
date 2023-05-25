@@ -17,8 +17,9 @@ import {
   ViewerCount,
   ChatInputWrap
 } from '@/components/broadcast/styleComponents';
-import io, { Socket } from "socket.io-client";
-import { getCookie } from "cookies-next";
+import io, { Socket } from 'socket.io-client';
+import { getCookie } from 'cookies-next';
+import jwt_decode, { JwtPayload } from 'jwt-decode';
 
 enum BroadcastState {
   READY = 'READY',
@@ -33,6 +34,7 @@ interface Broadcast {
   title: string;
   description: string;
   tags: string[];
+  userId: number;
   streamer: string;
   streamUrl: string;
   streamKey: string;
@@ -63,6 +65,7 @@ export default function BroadcastStream() {
   const [message, setMessage] = useState<string>('');
   const onMessage = (e) => setMessage(e.currentTarget.value);
 
+  const [isPermission, setIsPermission] = useState<boolean>(false);
   const [streamVideo, setStreamVideo] = useState<WebRTCAdaptor>(null!);
   const [broadcastStatus, setBroadcastStatus] = useState<BroadcastState>(BroadcastState.READY);
 
@@ -90,12 +93,18 @@ export default function BroadcastStream() {
       return fetchData.data;
     }
 
-    fetchUserData();
     fetchBroadcastData()
       .then((data) => {
+        const claims: JwtPayload = jwt_decode(auth);
+
+        if (data.userId !== claims.id) {
+          alert('접근 권한이 없는 페이지 입니다.');
+          router.back();
+        }
+
         if (data.state === BroadcastState.FINISHED) {
           alert('종료된 방송입니다.');
-          router.push('/home');
+          router.back();
         }
 
         const webRTCAdaptor = new WebRTCAdaptor({
@@ -120,6 +129,7 @@ export default function BroadcastStream() {
         setStreamVideo(webRTCAdaptor);
         setBroadcastStatus(data.state);
       });
+    fetchUserData();
 
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -127,8 +137,12 @@ export default function BroadcastStream() {
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
           }
+          setIsPermission(true);
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+          console.log(error);
+          setIsPermission(false);
+        });
     }
   }, [router.isReady]);
 
@@ -200,10 +214,14 @@ export default function BroadcastStream() {
   }
 
   const start = async () => {
-    if (confirm('방송을 시작하시겠습니까?') && streamVideo && broadcast) {
-      streamVideo.publish(broadcast.streamKey);
-      setBroadcastStatus(BroadcastState.BROADCASTING);
-      await broadcastStartActions(broadcast.streamKey);
+    if (confirm('방송을 시작하시겠습니까?')) {
+      if (isPermission && broadcast){
+        streamVideo.publish(broadcast.streamKey);
+        setBroadcastStatus(BroadcastState.BROADCASTING);
+        await broadcastStartActions(broadcast.streamKey);
+      } else {
+        alert('카메라 권한을 허용해주세요.');
+      }
     }
   };
 

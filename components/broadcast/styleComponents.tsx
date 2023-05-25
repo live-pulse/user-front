@@ -208,6 +208,7 @@ const VideoWrap = styled.div`
 
   video {
     height: 100vh;
+    width: 100vh;
     outline: none;
     border: none;
     object-fit: cover;
