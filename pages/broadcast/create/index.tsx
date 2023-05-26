@@ -1,7 +1,7 @@
 'use client'
 
 import styled from 'styled-components';
-import { Button, Checkbox, Input, Textarea } from '@nextui-org/react';
+import { Button, Input, Row, Textarea } from '@nextui-org/react';
 import { CameraIcon } from '@/components/svgs/Svgs';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -9,8 +9,6 @@ import { postAction, RequestUrl } from '@/api/myActions';
 import { getCookie } from 'cookies-next';
 
 export default function CreateBroadcast() {
-  const tagData = ["게임", "먹방", "일상", "공부", "쇼핑"];
-
   const router = useRouter();
 
   const [title, setTitle] = useState();
@@ -21,7 +19,20 @@ export default function CreateBroadcast() {
   const onThumbnailImageUrl = (e) => setThumbnailImageUrl(e.currentTarget.value);
   const [startDate, setStartDate] = useState('');
   const onStartDate = (e) => setStartDate(e.currentTarget.value);
+  const [tag, setTag] = useState<string>();
+  const onTag = (e) => setTag(e.currentTarget.value);
   const [tags, setTags] = useState<string[]>([]);
+  const addTags = () => {
+    if (!tag) {
+      alert('태그를 입력해주세요.');
+      return;
+    }
+    setTags([...tags, tag]);
+    setTag();
+  }
+  const removeTags = (value) => {
+    setTags(tags.filter(tag => tag !== value));
+  }
 
   useEffect(() => {
     if (router.isReady) {
@@ -37,8 +48,9 @@ export default function CreateBroadcast() {
     const date = new Date;
     date.setHours(Number(startDate.split(':')[0]));
     date.setMinutes(Number(startDate.split(':')[1]));
+    console.log(tags)
 
-    if (!title || !description || !thumbnailImageUrl || !startDate || !tags) {
+    if (!title || !description || !thumbnailImageUrl || !startDate || tags.length < 1) {
       alert('모든 항목을 입력해주세요.');
       return;
     }
@@ -65,14 +77,15 @@ export default function CreateBroadcast() {
       <Textarea initialValue={description} onChange={onDescription} label="방송 소개" placeholder="방송 소개" width="100%" />
       <Input initialValue={thumbnailImageUrl} onChange={onThumbnailImageUrl} label="썸네일 이미지" placeholder="썸네일 이미지 업로드" width="100%" />
       <div>
-        <span>태그 선택</span><br />
-        <Checkbox.Group value={tags} onChange={setTags}>
-          <TagBox>
-            {tagData.map((tag, index) => {
-              return <Checkbox value={tag} key={index} color="gradient" size="sm">{tag}</Checkbox>
-            })}
-          </TagBox>
-        </Checkbox.Group>
+        <Row justify="space-between" align="center">
+          <Input initialValue={tag} onChange={onTag} label="태그 추가" placeholder="태그 추가" width="100%" />
+          <Button auto color="gradient" onClick={addTags}>+</Button>
+        </Row>
+        <TagBox>
+          {tags.map((tag, index) => {
+            return <Button auto value={tag} key={index} color="gradient" size="xs" onClick={() => removeTags(tag)}>{tag} X</Button>
+          })}
+        </TagBox>
       </div>
       <Input value={startDate} onChange={onStartDate} label="방송 시작 시간" placeholder="방송 시작 시간" type="time" width="100%" />
       <Button onPress={create} icon={<CameraIcon  width={24} height={24} />} color="gradient" style={{width: '100%'}}>
@@ -123,4 +136,8 @@ const TagBox = styled.div`
   display: flex;
   justify-content: start;
   align-items: flex-end;
+  margin-top: -20px !important;
+  button {
+    margin-right: 5px;
+  }
 `;
