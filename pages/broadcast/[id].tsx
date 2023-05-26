@@ -174,29 +174,32 @@ export default function BroadcastInfo() {
     }
   }
 
-  const play = async () => {
+  const play = () => {
     if (broadcast) {
-      try {
-        const video: HTMLMediaElement = videoRef.current;
+      urlTest(broadcast.streamUrl)
+        .then(() => {
+          console.log('여긴 들어오겠지!!')
+          const video: HTMLMediaElement = videoRef.current;
 
-        if (video && Hls.isSupported()) {
-          const hlsInstance = new Hls();
-          hlsInstance.loadSource(broadcast.streamUrl);
-          hlsInstance.attachMedia(video);
-          setHls(hlsInstance);
-        } else if (video?.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = broadcast.streamUrl;
-        }
+          if (video && Hls.isSupported()) {
+            const hlsInstance = new Hls();
+            hlsInstance.loadSource(broadcast.streamUrl);
+            hlsInstance.attachMedia(video);
+            setHls(hlsInstance);
+          } else if (video?.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = broadcast.streamUrl;
+          }
 
-        await urlTest(broadcast.streamUrl);
+          if (hls) {
+            hls.destroy();
+          }
 
-        if (hls) {
-          hls.destroy();
-        }
-      } catch (e) {
-        console.error(e);
-        setPlaying(false);
-      }
+          setPlaying(false);
+        })
+        .catch(() => {
+          alert('해당 방송이 스트림중이 아닙니다.');
+          setPlaying(true);
+        });
     }
   }
 
@@ -209,7 +212,7 @@ export default function BroadcastInfo() {
   const urlTest = async (url: string) => {
     try {
       const response = await fetch(url);
-      if (!response.ok) throw new Error('Request faild!');
+      if (response.status === 404) throw new Error('Request faild!');
       return await response.json();
     } catch (e) {
       throw e;
@@ -245,7 +248,7 @@ export default function BroadcastInfo() {
                 </LiveBadge> }
           </LiveBadgeWrap>
         </HeaderWrap>
-        { (plaing && broadcast.state === BroadcastState.BROADCASTING) &&
+        { plaing && broadcast.state === BroadcastState.BROADCASTING &&
           <ButtonWrap>
             <Avatar onClick={play} size="xl" color="gradient" icon={<PlayIcon />} />
           </ButtonWrap>

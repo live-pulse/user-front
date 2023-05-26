@@ -10,6 +10,9 @@ const ButtonWrap = styled.div`
   bottom: 55%;
   position: absolute;
   z-index: 10;
+  span {
+    cursor: pointer;
+  }
 `;
 
 const ReadyWrap = styled.div`
