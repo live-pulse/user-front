@@ -28,6 +28,27 @@ export async function postAction<T>(prefixUrl: RequestUrl, request: any) {
   return;
 }
 
+export async function patchAction<T>(prefixUrl: RequestUrl, request: any) {
+  const auth: string = String(getCookie('auth'));
+  try {
+    const data = await fetch(`/api${prefixUrl}`, {
+      method: 'PATCH',
+      body: JSON.stringify(request),
+      headers: {
+        'Content-Type': 'application/json',
+        'auth': auth,
+      }
+    });
+    const result = await data.json();
+    if (result.message !== 'success') throw new Error(result.message);
+    return result;
+  } catch (e: any) {
+    console.error(e);
+    alert(e.message);
+  }
+  return;
+}
+
 export async function getRestActions<T>(prefixUrl: RequestUrl, request: any | null) {
   const auth: string = String(getCookie('auth'));
   const requestUrl = request ? `/api${prefixUrl}/${request}` : `/api${prefixUrl}`;
