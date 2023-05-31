@@ -5,7 +5,7 @@ import { Button, Input, Row, Textarea } from '@nextui-org/react';
 import { CameraIcon } from '@/components/svgs/Svgs';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { postAction, RequestUrl } from '@/api/myActions';
+import { postAction, postImage, RequestUrl } from '@/api/myActions';
 import { getCookie } from 'cookies-next';
 
 export default function CreateBroadcast() {
@@ -16,20 +16,29 @@ export default function CreateBroadcast() {
   const [description, setDescription] = useState();
   const onDescription = (e) => setDescription(e.currentTarget.value);
   const [thumbnailImageUrl, setThumbnailImageUrl] = useState();
-  const onThumbnailImageUrl = (e) => setThumbnailImageUrl(e.currentTarget.value);
   const [startDate, setStartDate] = useState('');
   const onStartDate = (e) => setStartDate(e.currentTarget.value);
   const [tag, setTag] = useState<string>();
   const onTag = (e) => setTag(e.currentTarget.value);
   const [tags, setTags] = useState<string[]>([]);
+
+  const uploadImage = async (e) => {
+    const file = e.target.files[0];
+    const result = await postImage(file);
+    if (result) {
+      setThumbnailImageUrl(result.data);
+    }
+  }
+
   const addTags = () => {
     if (!tag) {
       alert('태그를 입력해주세요.');
       return;
     }
     setTags([...tags, tag]);
-    setTag();
+    setTag('');
   }
+
   const removeTags = (value) => {
     setTags(tags.filter(tag => tag !== value));
   }
@@ -75,7 +84,9 @@ export default function CreateBroadcast() {
       <h2>방송 생성</h2>
       <Input initialValue={title} onChange={onTitle} label="방송 제목" placeholder="방송 제목" width="100%" />
       <Textarea initialValue={description} onChange={onDescription} label="방송 소개" placeholder="방송 소개" width="100%" />
-      <Input initialValue={thumbnailImageUrl} onChange={onThumbnailImageUrl} label="썸네일 이미지" placeholder="썸네일 이미지 업로드" width="100%" />
+      <FileNoneWrap>
+        <Input type="file" initialValue={thumbnailImageUrl} onInput={uploadImage} label="썸네일 이미지" placeholder="썸네일 이미지 업로드" width="100%" />
+      </FileNoneWrap>
       <div>
         <Row justify="space-between" align="center">
           <Input initialValue={tag} onChange={onTag} label="태그 추가" placeholder="태그 추가" width="100%" />
@@ -141,3 +152,14 @@ const TagBox = styled.div`
     margin-right: 5px;
   }
 `;
+
+const FileNoneWrap = styled.div`
+  input::file-selector-button {
+    display: none;
+  }
+  input[type="file"] {
+    margin-top: 1.6em;
+    color: var(--nextui--inputTextColor);
+  }
+`;
+

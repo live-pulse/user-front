@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import styled from 'styled-components';
 import { Button, Input, Modal, Row, Text } from '@nextui-org/react';
@@ -6,7 +6,7 @@ import { Mail, NameIcon, Password, PhoneIcon, PhotoIcon, UserIcon } from '@/comp
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Link from 'next/link';
-import { postAction, RequestUrl } from '@/api/myActions';
+import { postAction, postImage, RequestUrl } from '@/api/myActions';
 
 export default function UsersCreate() {
   const router = useRouter();
@@ -25,7 +25,14 @@ export default function UsersCreate() {
   const [phone, setPhone] = useState();
   const onPhone = (e) => setPhone(e.currentTarget.value);
   const [userImageUrl, setUserImageUrl] = useState();
-  const onUserImageUrl = (e) => setUserImageUrl(e.currentTarget.value);
+
+  const uploadImage = async (e) => {
+    const file = e.target.files[0];
+    const result = await postImage(file);
+    if (result) {
+      setUserImageUrl(result.data);
+    }
+  }
 
   const create = async () => {
     if (!validAccount) {
@@ -36,7 +43,6 @@ export default function UsersCreate() {
     if (password !== passwordCheck) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
-
     }
 
     if (!account || !password || !passwordCheck || !email || !name || !phone || !userImageUrl) {
@@ -134,18 +140,20 @@ export default function UsersCreate() {
           placeholder="Name"
           contentLeft={<NameIcon />}
         />
+        <FileNoneWrap>
+          <Input
+            onInput={uploadImage}
+            type="file"
+            bordered
+            fullWidth
+            color="secondary"
+            placeholder={userImageUrl ? userImageUrl : "User Image"}
+            contentLeft={<PhotoIcon />}
+          />
+        </FileNoneWrap>
         <Input
           value={phone}
           onChange={onPhone}
-          bordered
-          fullWidth
-          color="secondary"
-          placeholder="User Image"
-          contentLeft={<PhotoIcon />}
-        />
-        <Input
-          value={userImageUrl}
-          onChange={onUserImageUrl}
           bordered
           fullWidth
           color="secondary"
@@ -173,5 +181,16 @@ const BackGroundImage = styled.div`
   width: 100%;
   background-image: url('https://g-grafolio.pstatic.net/20210227_247/1614414885773WKham_JPEG/KakaoTalk_Photo_2021-02-26-01-47-09_m.jpg');
   background-size: cover;
+`;
+
+const FileNoneWrap = styled.div`
+  input::file-selector-button {
+    display: none;
+  }
+  input[type="file"] {
+    margin-top: 1.6em;
+    color: var(--nextui--inputTextColor);
+  }
+  height: 40px !important;
 `;
 

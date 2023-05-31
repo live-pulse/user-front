@@ -88,3 +88,23 @@ export async function broadcastFinishActions<T>(streamKey: string) {
   }
   return;
 }
+
+export async function postImage(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("path", "LIVE_PULSE");
+  try {
+    const data = await fetch('https://cdn.hannah-log.site/v1/api/upload', {
+      method: 'POST',
+      body: formData,
+    })
+      .catch((e) => {
+        console.error(e);
+        throw new Error('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+      });
+    return await data.json();
+  } catch (e: any) {
+    alert(e.message);
+  }
+  return;
+}
