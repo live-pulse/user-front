@@ -6,6 +6,7 @@ import { Avatar, Badge, Grid } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 import { getRestActions, RequestUrl } from '@/api/myActions';
 import Link from 'next/link';
+import { dateKoFormat, timeFormat } from '@/components/utils/dateUtils';
 
 interface BroadcastInfo {
   id: number;
@@ -57,14 +58,6 @@ export default function ReadyBroadcastCard() {
     }
   }, [readyBroadcasts]);
 
-  const dateFormat = (date: Date) => {
-    return `${date.getMonth() + 1}월 ${date.getDate()}일`
-  }
-
-  const timeFormat = (date: Date) => {
-    return `${date.getHours()}:${date.getMinutes()}`
-  }
-
   return <>
     { readyBroadcasts.map((item: BroadcastInfo) => {
       return <CardWrap key={item.id}>
@@ -73,7 +66,7 @@ export default function ReadyBroadcastCard() {
             <ImageShadowBox>
               <ImageDate>
                 <EmptyBox />
-                <h6>{dateFormat(item.startDate)}</h6>
+                <h6>{dateKoFormat(item.startDate)}</h6>
                 <h2>{timeFormat(item.startDate)}</h2>
               </ImageDate>
               <Image src={item.thumbnailImageUrl} alt={item.title} key={item.id} />

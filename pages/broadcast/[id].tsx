@@ -22,6 +22,7 @@ import {
 import { getRestActions, RequestUrl } from '@/api/myActions';
 import io, { Socket } from 'socket.io-client';
 import { getCookie } from 'cookies-next';
+import { dateFormat, timeFormat } from '@/components/utils/dateUtils';
 
 enum BroadcastState {
   READY = 'READY',
@@ -84,8 +85,8 @@ export default function BroadcastInfo() {
 
     async function fetchBroadcastData() {
       const fetchData = await getRestActions(RequestUrl.BROADCASTS, id);
-      if (!fetchData) router.push('/home');
-      setBroadcast(fetchData?.data);
+      if (!fetchData) router.back();
+      setBroadcast(fetchData.data);
       return fetchData.data;
     }
 
@@ -178,7 +179,6 @@ export default function BroadcastInfo() {
     if (broadcast) {
       urlTest(broadcast.streamUrl)
         .then(() => {
-          console.log('여긴 들어오겠지!!')
           const video: HTMLMediaElement = videoRef.current;
 
           if (video && Hls.isSupported()) {
@@ -217,16 +217,6 @@ export default function BroadcastInfo() {
     } catch (e) {
       throw e;
     }
-  }
-
-  const dateFormat = (date: Date) => {
-    const dateOb = new Date(date);
-    return `${dateOb.getFullYear()}-${dateOb.getMonth() + 1}-${dateOb.getDate()}`;
-  }
-
-  const timeFormat = (date: Date) => {
-    const dateOb = new Date(date);
-    return `${dateOb.getHours()}:${dateOb.getMinutes()}`;
   }
 
   return (
