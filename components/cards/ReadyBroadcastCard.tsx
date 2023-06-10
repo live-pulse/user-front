@@ -31,25 +31,7 @@ export default function ReadyBroadcastCard() {
   useEffect(() => {
     async function fetchLiveBroadcastData() {
       const fetch = await getRestActions(RequestUrl.BROADCASTS, 'ready');
-      const setFetch: BroadcastInfo[] = fetch.data.map((item: BroadcastInfo) => {
-        return {
-          id: item.id,
-          title: item.title,
-          description: item.description,
-          streamKey: item.streamKey,
-          thumbnailImageUrl: item.thumbnailImageUrl,
-          startDate: new Date(item.startDate),
-          userId: item.userId,
-          streamer: item.streamer,
-          profileUrl: item.profileUrl,
-          state: item.state,
-          streamUrl: item.streamUrl,
-          tags: item.tags,
-          createdAt: new Date(item.createdAt),
-          updatedAt: new Date(item.updatedAt),
-        }
-      });
-      setReadyBroadcasts(setFetch);
+      setReadyBroadcasts(fetch.data);
       return fetch.data;
     }
 

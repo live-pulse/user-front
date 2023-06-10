@@ -177,45 +177,28 @@ export default function BroadcastInfo() {
 
   const play = () => {
     if (broadcast) {
-      urlTest(broadcast.streamUrl)
-        .then(() => {
-          const video: HTMLMediaElement = videoRef.current;
+      const video: HTMLMediaElement = videoRef.current;
 
-          if (video && Hls.isSupported()) {
-            const hlsInstance = new Hls();
-            hlsInstance.loadSource(broadcast.streamUrl);
-            hlsInstance.attachMedia(video);
-            setHls(hlsInstance);
-          } else if (video?.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = broadcast.streamUrl;
-          }
+      if (video && Hls.isSupported()) {
+        const hlsInstance = new Hls();
+        hlsInstance.loadSource(broadcast.streamUrl);
+        hlsInstance.attachMedia(video);
+        setHls(hlsInstance);
+      } else if (video?.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = broadcast.streamUrl;
+      }
 
-          if (hls) {
-            hls.destroy();
-          }
+      if (hls) {
+        hls.destroy();
+      }
 
-          setPlaying(false);
-        })
-        .catch(() => {
-          alert('해당 방송이 스트림중이 아닙니다.');
-          setPlaying(true);
-        });
+      setPlaying(false);
     }
   }
 
   const onCheckEnter = (e) => {
     if(e.key === 'Enter') {
       sendMessage();
-    }
-  }
-
-  const urlTest = async (url: string) => {
-    try {
-      const response = await fetch(url);
-      if (response.status === 404) throw new Error('Request faild!');
-      return await response.json();
-    } catch (e) {
-      throw e;
     }
   }
 
