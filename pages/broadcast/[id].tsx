@@ -177,6 +177,8 @@ export default function BroadcastInfo() {
 
   const play = () => {
     if (broadcast) {
+      if (!testUrl(broadcast.streamUrl)) return;
+
       const video: HTMLMediaElement = videoRef.current;
 
       if (video && Hls.isSupported()) {
@@ -199,6 +201,17 @@ export default function BroadcastInfo() {
   const onCheckEnter = (e) => {
     if(e.key === 'Enter') {
       sendMessage();
+    }
+  }
+
+  const testUrl = async (streamUrl: string) => {
+    try {
+      const response = await fetch(streamUrl);
+      if (response.status === 404) throw new Error('404');
+      return true;
+    } catch (e) {
+      alert('해당 방송이 스트림중이 아닙니다.');
+      return false;
     }
   }
 
