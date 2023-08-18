@@ -215,13 +215,20 @@ export default function BroadcastInfo() {
     }
   }
 
+  const exit = () => {
+    if (socket) {
+      socket.disconnect();
+    }
+    router.push('/home');
+  }
+
   return (
     <BroadcastWrap>
       { broadcast ? <>
         <HeaderWrap>
           <Header>
             <h3>{broadcast.title}</h3>
-            <Link href={'/home'}>{outIcon({width: 35, height: 35})}</Link>
+            <div onClick={exit}>{outIcon({width: 35, height: 35})}</div>
           </Header>
           <LiveBadgeWrap>
             <span>{broadcast.streamer}</span>
