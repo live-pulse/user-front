@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import Hls from 'hls.js';
-import Link from 'next/link';
 import { outIcon, PlayIcon } from '@/components/svgs/Svgs';
 import { Avatar, Badge, Loading, Button, Text } from '@nextui-org/react';
 import {

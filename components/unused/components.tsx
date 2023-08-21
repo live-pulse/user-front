@@ -26,6 +26,20 @@ export const NotOpen = () => {
   </TextWrap>;
 }
 
+export const Redirection = () => {
+  return <TextWrap>
+    <Text
+      size="$3xl"
+      css={{
+        textGradient: "45deg, $blue600 -20%, $pink600 50%",
+      }}
+      weight="bold"
+    >
+      리다이렉션중입니다.
+    </Text>
+  </TextWrap>
+}
+
 
 const TextWrap = styled.div`
   display: flex;
