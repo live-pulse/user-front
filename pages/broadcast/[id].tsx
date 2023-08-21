@@ -16,7 +16,7 @@ import {
   LiveBadge,
   LiveBadgeWrap,
   ViewerCount,
-  ButtonWrap, VideoWrap, Chat, Input,
+  ButtonWrap, VideoWrap, Chat, Input, Pointer,
 } from '@/components/broadcast/styleComponents';
 import { getRestActions, RequestUrl } from '@/api/myActions';
 import io, { Socket } from 'socket.io-client';
@@ -228,7 +228,7 @@ export default function BroadcastInfo() {
         <HeaderWrap>
           <Header>
             <h3>{broadcast.title}</h3>
-            <div onClick={exit}>{outIcon({width: 35, height: 35})}</div>
+            <Pointer onClick={exit}>{outIcon({width: 35, height: 35})}</Pointer>
           </Header>
           <LiveBadgeWrap>
             <span>{broadcast.streamer}</span>

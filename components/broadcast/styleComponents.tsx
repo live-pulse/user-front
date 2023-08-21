@@ -255,6 +255,10 @@ const Input = styled.input`
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 `;
 
+const Pointer = styled.div`
+  cursor: pointer;
+`;
+
 export {
   BroadcastWrap,
   HeaderWrap,
@@ -271,4 +275,5 @@ export {
   VideoWrap,
   ChatInputWrap,
   Input,
+  Pointer,
 };
