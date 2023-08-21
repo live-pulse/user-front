@@ -217,6 +217,7 @@ export default function BroadcastInfo() {
 
   const exit = () => {
     if (socket) {
+      setSocket(null);
       socket.disconnect();
     }
     router.push('/home');
